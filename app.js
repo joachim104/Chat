@@ -37,7 +37,8 @@ io.on('connect', socket => {
         // emits to all the sockets
         console.log("socket bliver ramt")
         const socketId = socket.id;
-        io.emit("here's the message", data, socketId);
+        // io.emit("here's the message", data, socketId);
+        socket.broadcast.emit("here's the message", data);
 
 
 

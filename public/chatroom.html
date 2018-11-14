@@ -36,21 +36,18 @@
         $('#btn').on('click', event => {
             const message = $('#message-input').val();
             socket.emit('send-message', { message });
+            $('.chat').append('<p class="chat-message chat-message-self">' + message + '</p>'); 
             $('#message-input').val("");
         })
         socket.on("here's the message", function(data, socketId) {
-            console.log("bliver ramt")
-            if (socketId == socket.id) {
-                $('.chat').append('<p class="chat-message >' + data.message + '</p>');
-                console.log("rammer self") 
-            }          
-            else {               
-                    $('.chat').append('<p class="chat-message receive>' + data.message + '</p>');
+            console.log("bliver ramt")               
+                    $('.chat').append('<p class="chat-message">' + data.message + '</p>');
                     // $("#2").css("background", "#1ddced");
                     console.log("Rammer friend!");
-            }
         })
+
     </script>
+
 </body>
 
 </html>

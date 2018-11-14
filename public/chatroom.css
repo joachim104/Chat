@@ -51,13 +51,14 @@ body {
     font-size: 20px;
 }
 
-#send {
-    background: #1ddced; 
-    /* order: -1; */
-}
+.chat-message {
+    background: #1ddced;
+    order: -1;
 
-#receive {
-    background: #1adda4; 
+} 
+
+.chat-message-self {
+    background: #333;
 }
 
 .chat-form {
