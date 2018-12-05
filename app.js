@@ -6,6 +6,7 @@ var app = express();
 const Knex = require("knex"); // her henter vi knex. 
 const Model = require("objection").Model;
 const knexConfig = require('./knexfile').development;
+// body-parser giver adgang til req.body
 const bodyParser = require("body-parser");
 
 // server opsætning
@@ -19,11 +20,12 @@ const public = app.use(express.static('public'));
 
 
 const session = require('express-session');
+
 app.use(session({
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true }
+    cookie: { secure: true } // hvis sættes til false behøver vi ikke https
 }));
 
 // connect knex with objection and put query methods on the models
@@ -34,43 +36,23 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 io.on('connect', socket => {
     socket.on('send-message', function(data) {
-        // emits to all the sockets
-        console.log("socket bliver ramt")
-        const socketId = socket.id;
-        // io.emit("here's the message", data, socketId);
+        // emits to all but the socket itself
         socket.broadcast.emit("here's the message", data);
 
+        // emits to all the sockets
+        // io.emit("here's the message", data);
 
-
-
-        // io.sockets.socket(data.clientid).emit("here's the message", {
-        //     message: data.message,
-        //     senderid: socket.id
-        // });
 
         // emits only to the specific socket
-        // socket.emit("here's the color", data);
-        
-        // emits to all but the socket itself
-        // socket.broadcast.emit("here's the color", data);
+        // socket.emit("here's the message", data);
+    
     })
 })
-
-// app.listen(3000, function (err) {
-//     if (err) {
-//         console.log("Server is dead")
-
-//     }
-//     else {
-//         console.log("Server is alive")
-//     }
-// })
 
 server.listen(3000, (err) => {
     if (err) throw err;
     console.log("Server is running on port 3000");
 })
-
 
 // convenience object.. easy access to the models
 const db = {

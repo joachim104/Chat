@@ -3,7 +3,7 @@ exports.userRoute = function (app, db, bodyParser, public) {
     const bcrypt = require('bcrypt');
     const saltRounds = 10;
 
-    app.get("/signup", function (req, res) {
+    app.get("/signup",(req, res) => {
         var path = require('path');
         res.sendFile(path.resolve(__dirname + '/../public/signup.html'));
     });
@@ -22,7 +22,7 @@ exports.userRoute = function (app, db, bodyParser, public) {
                     res.send({ "status": 200, "response": "username already exist" });
                 }
                 else {
-                    bcrypt.hash(password, saltRounds).then(function (hash) {
+                    bcrypt.hash(password, saltRounds).then(function(hash) {
                         // INSERT INTO users('user', 'password') VALUES('?', '?');
                         db.User.query().insert({ username, password: hash }).then(persistedData => {
                             // console.log("data", persistedData)
@@ -48,6 +48,7 @@ exports.userRoute = function (app, db, bodyParser, public) {
     app.get('/chatroom', (req, res) => {
         var path = require('path')
         res.sendFile(path.resolve(__dirname + '/../public/chatroom.html'));
+
     })
 
     app.post('/login', (req, res) => {

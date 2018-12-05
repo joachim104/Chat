@@ -52,13 +52,12 @@ body {
 }
 
 .chat-message {
-    background: #1ddced;
-    order: -1;
-
+    background: #1adda4;
+    /* order: -1; */
 } 
 
 .chat-message-self {
-    background: #333;
+    background: #1ddced;
 }
 
 .chat-form {
