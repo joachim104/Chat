@@ -9,7 +9,7 @@ class Message extends Model {
     static get jsonSchema() {
         return {
             type: "object",
-            require: ['id', 'message', 'user-id', 'room-id'],
+            // require: ['id', 'message', 'user-id', 'room-id'],
 
             properties: {
                 id: {type: 'integer'},

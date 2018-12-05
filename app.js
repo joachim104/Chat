@@ -38,15 +38,10 @@ io.on('connect', socket => {
         // emits to all but the socket itself
         socket.broadcast.emit("here's the message", data);
 
-        let message = data.message
+        let message = data.message;
+        db.Message.query().insert({ message: message }).then(console.log(message)
+        );
         
-        
-
-        db.Message.query().insert({ message: message }).then(data => {
-            console.log(data);
-            
-        })
-
         // emits to all the sockets
         // io.emit("here's the message", data);
 
@@ -77,4 +72,4 @@ app.get('/', (req, res) => {
 
 // her wrapper vi hele filen i userRoutes
 const userRoutes = require('./routes/user');
-userRoutes.userRoute(app, db, bodyParser, public);
+userRoutes.userRoute(app, db, bodyParser, public, session);
