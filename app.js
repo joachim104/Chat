@@ -24,7 +24,7 @@ app.use(session({
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true } // hvis sættes til false behøver vi ikke https
+    cookie: { secure: false } // hvis sættes til false behøver vi ikke https
 }));
 
 // connect knex with objection and put query methods on the models
@@ -37,6 +37,15 @@ io.on('connect', socket => {
     socket.on('send-message', function(data) {
         // emits to all but the socket itself
         socket.broadcast.emit("here's the message", data);
+
+        let message = data.message
+        
+        
+
+        db.Message.query().insert({ message: message }).then(data => {
+            console.log(data);
+            
+        })
 
         // emits to all the sockets
         // io.emit("here's the message", data);

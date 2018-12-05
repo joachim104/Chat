@@ -48,6 +48,7 @@ exports.userRoute = function (app, db, bodyParser, public) {
     app.get('/chatroom', (req, res) => {
         var path = require('path')
         res.sendFile(path.resolve(__dirname + '/../public/chatroom.html'));
+        
     })
 
     app.post('/login', (req, res) => {
