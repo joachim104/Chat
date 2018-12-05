@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "bcrypt": "^3.0.2",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "knex": "^0.15.2",
+    "mysql2": "^1.6.1",
+    "objection": "^1.4.0",
+    "socket.io": "^2.1.1"
+  },
+  "name": "chat_site",
+  "version": "1.0.0",
+  "main": "app.js",
+  "devDependencies": {
+    "@angular/cli": "^6.0.0-rc.4"
+  },
+  "scripts": {
+    "start": "nodemon app.js",
+    "create-migration": "knex migrate:make name",
+    "migrate-run": "knex migrate:latest",
+    "migrate-rollback": "knex migrate:rollback",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Joac",
+  "license": "ISC",
+  "description": ""
+}
