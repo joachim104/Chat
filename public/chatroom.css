@@ -52,22 +52,12 @@ body {
 }
 
 .chat-message {
-<<<<<<< HEAD
-    background: #1ddced;
-    order: -1;
-
-} 
-
-.chat-message-self {
-    background: #333;
-=======
     background: #1adda4;
     /* order: -1; */
 } 
 
 .chat-message-self {
     background: #1ddced;
->>>>>>> 6888eb111e874c52bf8c399a9b31c80df5f32333
 }
 
 .chat-form {

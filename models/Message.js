@@ -5,10 +5,7 @@ class Message extends Model {
         return 'messages';
       }
 
-<<<<<<< HEAD
-=======
       // denne funktion er en måde hvorpå databasens objekter bliver repræsenteret i Json-format
->>>>>>> 6888eb111e874c52bf8c399a9b31c80df5f32333
     static get jsonSchema() {
         return {
             type: "object",
