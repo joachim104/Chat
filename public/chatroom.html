@@ -18,33 +18,33 @@
             <div class="chat">
             </div>
         </div>
-
         <div class="chat-form">
             <textarea id="message-input"></textarea>
             <button id="btn">Send</button>
         </div>
     </div>
 
+
+<!-- <div class="chat self">
+        <div class="user-photo"></div>
+        <p id="sender1" class="chat-message"></p>
+    </div> -->
+
     <script>
         const socket = io.connect('http://localhost:3000')
-        
         $('#btn').on('click', event => {
             const message = $('#message-input').val();
-
-            // her bruger vi en RegEx til at fjerne alt whitespace i message og tjekker om den er lig nul
-            if (message.replace(/ /g,'').length != 0) {
-                
-                socket.emit('send-message', { message });
-                $('.chat').append('<p class="chat-message chat-message-self">' + message + '</p>');
-                $('.chat').append('<div class="user-photo"></div>');
-                $('#message-input').val("");
-            }
-
+            socket.emit('send-message', { message });
+            $('.chat').append('<p class="chat-message chat-message-self">' + message + '</p>'); 
+            $('#message-input').val("");
         })
-        socket.on("here's the message", function (data) {
-            $('.chat').append('<p class="chat-message">' + data.message + '</p>');
-            $('.chat').append('<div class="user-photo"></div>');
+        socket.on("here's the message", function(data, socketId) {
+            console.log("bliver ramt")               
+                    $('.chat').append('<p class="chat-message">' + data.message + '</p>');
+                    // $("#2").css("background", "#1ddced");
+                    console.log("Rammer friend!");
         })
+
     </script>
 
 </body>

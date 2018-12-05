@@ -20,7 +20,6 @@ const public = app.use(express.static('public'));
 
 
 const session = require('express-session');
-
 app.use(session({
     secret: 'keyboard cat',
     resave: false,
