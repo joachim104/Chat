@@ -6,15 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Chat Room</title>
+<<<<<<< HEAD
     <script src="main.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.slim.js"></script>
     <link rel="stylesheet" type="text/css" href="chatroom.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
     crossorigin="anonymous">
+=======
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.slim.js"></script>
+    <link rel="stylesheet" type="text/css" href="chatroom.css">
+>>>>>>> 6888eb111e874c52bf8c399a9b31c80df5f32333
 </head>
 
 <body>
 
+<<<<<<< HEAD
 
         <div id="header"></div>
 
@@ -25,12 +32,21 @@
                 <div class="user-photo"></div>
             </div>
         </div>
+=======
+    <div class="chatbox">
+        <div class="chatlogs">
+            <div class="chat">
+            </div>
+        </div>
+
+>>>>>>> 6888eb111e874c52bf8c399a9b31c80df5f32333
         <div class="chat-form">
             <textarea id="message-input"></textarea>
             <button id="btn">Send</button>
         </div>
     </div>
 
+<<<<<<< HEAD
 
 <!-- <div class="chat self">
         <div class="user-photo"></div>
@@ -57,6 +73,30 @@
 
 <div id="footer"></div>
 
+=======
+    <script>
+        const socket = io.connect('http://localhost:3000')
+        
+        $('#btn').on('click', event => {
+            const message = $('#message-input').val();
+
+            // her bruger vi en RegEx til at fjerne alt whitespace i message og tjekker om den er lig nul
+            if (message.replace(/ /g,'').length != 0) {
+                
+                socket.emit('send-message', { message });
+                $('.chat').append('<p class="chat-message chat-message-self">' + message + '</p>');
+                $('.chat').append('<div class="user-photo"></div>');
+                $('#message-input').val("");
+            }
+
+        })
+        socket.on("here's the message", function (data) {
+            $('.chat').append('<p class="chat-message">' + data.message + '</p>');
+            $('.chat').append('<div class="user-photo"></div>');
+        })
+    </script>
+
+>>>>>>> 6888eb111e874c52bf8c399a9b31c80df5f32333
 </body>
 
 </html>

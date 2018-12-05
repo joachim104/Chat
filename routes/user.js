@@ -3,7 +3,11 @@ exports.userRoute = function (app, db, bodyParser, public) {
     const bcrypt = require('bcrypt');
     const saltRounds = 10;
 
+<<<<<<< HEAD
     app.get("/signup", function (req, res) {
+=======
+    app.get("/signup",(req, res) => {
+>>>>>>> 6888eb111e874c52bf8c399a9b31c80df5f32333
         var path = require('path');
         res.sendFile(path.resolve(__dirname + '/../public/signup.html'));
     });
@@ -22,7 +26,11 @@ exports.userRoute = function (app, db, bodyParser, public) {
                     res.send({ "status": 200, "response": "username already exist" });
                 }
                 else {
+<<<<<<< HEAD
                     bcrypt.hash(password, saltRounds).then(function (hash) {
+=======
+                    bcrypt.hash(password, saltRounds).then(function(hash) {
+>>>>>>> 6888eb111e874c52bf8c399a9b31c80df5f32333
                         // INSERT INTO users('user', 'password') VALUES('?', '?');
                         db.User.query().insert({ username, password: hash }).then(persistedData => {
                             // console.log("data", persistedData)
@@ -48,6 +56,10 @@ exports.userRoute = function (app, db, bodyParser, public) {
     app.get('/chatroom', (req, res) => {
         var path = require('path')
         res.sendFile(path.resolve(__dirname + '/../public/chatroom.html'));
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6888eb111e874c52bf8c399a9b31c80df5f32333
     })
 
     app.post('/login', (req, res) => {
