@@ -25,7 +25,7 @@ app.use(session({
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true } // hvis sættes til false behøver vi ikke https
+    cookie: { secure: false } // hvis sættes til false behøver vi ikke https
 }));
 
 // connect knex with objection and put query methods on the models
