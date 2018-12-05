@@ -1,4 +1,6 @@
-exports.userRoute = function (app, db, bodyParser, public) {
+exports.userRoute = function (app, db, bodyParser, public, session) {
+
+    app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }}));
 
     const bcrypt = require('bcrypt');
     const saltRounds = 10;
@@ -46,8 +48,16 @@ exports.userRoute = function (app, db, bodyParser, public) {
     })
 
     app.get('/chatroom', (req, res) => {
-        var path = require('path')
-        res.sendFile(path.resolve(__dirname + '/../public/chatroom.html'));
+        if (req.session.isLoggedIn == true)
+        {
+            var path = require('path')
+            res.sendFile(path.resolve(__dirname + '/../public/chatroom.html'));
+            console.log("Denne bruger inde på ", req.session.username);
+        }
+        else {
+            var path = require('path')
+            res.redirect(path.resolve(__dirname + '/../public/login.html'));
+        }
     })
 
     app.post('/login', (req, res) => {
@@ -59,11 +69,11 @@ exports.userRoute = function (app, db, bodyParser, public) {
                 bcrypt.compare(password, userArray[0].password).then(response => {
                     if (response) {
                         req.session.isLoggedIn = true;
-                        console.log("login succes")
+                        req.session.username = req.body.username;
+                        req.session.id = userArray[0].id;
                         res.redirect('/chatroom');
                     }
                     else {
-                        console.log("login failed 1")
                         res.send({ "status": 403, "response": "unauthorized" })
                     }
                 })

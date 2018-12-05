@@ -24,12 +24,6 @@
         </div>
     </div>
 
-
-<!-- <div class="chat self">
-        <div class="user-photo"></div>
-        <p id="sender1" class="chat-message"></p>
-    </div> -->
-
     <script>
         const socket = io.connect('http://localhost:3000')
         $('#btn').on('click', event => {
@@ -41,10 +35,8 @@
         socket.on("here's the message", function(data, socketId) {
             console.log("bliver ramt")               
                     $('.chat').append('<p class="chat-message">' + data.message + '</p>');
-                    // $("#2").css("background", "#1ddced");
                     console.log("Rammer friend!");
         })
-
     </script>
 
 </body>
