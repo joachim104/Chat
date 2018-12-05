@@ -12,4 +12,9 @@ head.appendChild(script);
 function handler() {
     $("#header").load("./components/header.html");
     $("#footer").load("./components/footer.html");
+
+
+    $("#username").val("admin");
+    $("#password").val("admin");
 }
+
