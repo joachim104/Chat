@@ -72,4 +72,4 @@ app.get('/', (req, res) => {
 
 // her wrapper vi hele filen i userRoutes
 const userRoutes = require('./routes/user');
-userRoutes.userRoute(app, db, bodyParser, public, session);
+userRoutes.userRoute(app, db, bodyParser, public);

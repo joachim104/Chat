@@ -1,6 +1,6 @@
-exports.userRoute = function (app, db, bodyParser, public, session) {
+exports.userRoute = function (app, db, bodyParser, public) {
 
-    app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }}));
+    // app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }}));
 
     const bcrypt = require('bcrypt');
     const saltRounds = 10;
@@ -14,8 +14,6 @@ exports.userRoute = function (app, db, bodyParser, public, session) {
         const username = req.body.username;
         const password = req.body.password;
 
-        console.log("signup post bliver ramt");
-
         if (username && password) {
             // SELECT * FROM users WHERE username = '?' 
             db.User.query().select().where({ username }).then(userArray => {
@@ -27,9 +25,7 @@ exports.userRoute = function (app, db, bodyParser, public, session) {
                     bcrypt.hash(password, saltRounds).then(function(hash) {
                         // INSERT INTO users('user', 'password') VALUES('?', '?');
                         db.User.query().insert({ username, password: hash }).then(persistedData => {
-                            // console.log("data", persistedData)
                             req.session.isLoggedIn = true;
-                            console.log("everything went well");
                             res.send({ "status": 200, "response": "everything went well" });
                         });
                     });
@@ -56,7 +52,7 @@ exports.userRoute = function (app, db, bodyParser, public, session) {
         }
         else {
             var path = require('path')
-            res.redirect(path.resolve(__dirname + '/../public/login.html'));
+            res.sendFile(path.resolve(__dirname + '/../public/login.html'));
         }
     })
 
@@ -80,7 +76,8 @@ exports.userRoute = function (app, db, bodyParser, public, session) {
             }
             else {
                 console.log("login failed 2")
-                res.send({ "status": 403, "response": "unauthorized" })
+                var path = require('path')
+                res.sendFile(path.resolve(__dirname + '/../public/login.html'));
             }
         })
     });
