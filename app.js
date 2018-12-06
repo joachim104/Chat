@@ -34,9 +34,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 io.on('connect', socket => {
-    socket.on('send-message', function(data) {
+    socket.on('send-message', function(data, req) {
         // emits to all but the socket itself
         socket.broadcast.emit("here's the message", data);
+
+        // let userId = req.session;
+
+        console.log(userId);
 
         let message = data.message;
         db.Message.query().insert({ message: message }).then(console.log(message)
@@ -68,7 +72,6 @@ const db = {
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
-
 
 // her wrapper vi hele filen i userRoutes
 const userRoutes = require('./routes/user');
