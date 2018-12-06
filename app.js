@@ -20,6 +20,7 @@ const public = app.use(express.static('public'));
 
 
 const session = require('express-session');
+
 app.use(session({
     secret: 'keyboard cat',
     resave: false,
@@ -40,8 +41,9 @@ io.on('connect', socket => {
 
         // let userId = req.session;
 
-        console.log(userId);
-
+        // let userId = req.session.id
+        // console.log(userId);
+        
         let message = data.message;
         db.Message.query().insert({ message: message }).then(console.log(message)
         );
@@ -75,4 +77,6 @@ app.get('/', (req, res) => {
 
 // her wrapper vi hele filen i userRoutes
 const userRoutes = require('./routes/user');
+const roomRoutes = require('./routes/room');
+roomRoutes.roomRoute(app,db,bodyParser, public);
 userRoutes.userRoute(app, db, bodyParser, public);
