@@ -1,9 +1,10 @@
 exports.userRoute = function (app, db, bodyParser, public) {
 
-    // app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }}));
 
     const bcrypt = require('bcrypt');
     const saltRounds = 10;
+
+    const userArray = [];
 
     app.get("/signup",(req, res) => {
         var path = require('path');
@@ -26,7 +27,8 @@ exports.userRoute = function (app, db, bodyParser, public) {
                         // INSERT INTO users('user', 'password') VALUES('?', '?');
                         db.User.query().insert({ username, password: hash }).then(persistedData => {
                             req.session.isLoggedIn = true;
-                            res.send({ "status": 200, "response": "everything went well" });
+                            // res.send({ "status": 200, "response": "everything went well" });
+                            res.redirect('/chatroom');
                         });
                     });
                 }
@@ -43,18 +45,30 @@ exports.userRoute = function (app, db, bodyParser, public) {
         res.sendFile(path.resolve(__dirname + '/../public/login.html'));
     })
 
+    app.get('/user-page', (req, res) => {
+        var path = require('path')
+        res.sendFile(path.resolve(__dirname + '/../public/user-page.html'));
+    })
+
     app.get('/chatroom', (req, res) => {
         if (req.session.isLoggedIn == true)
         {
             var path = require('path')
             res.sendFile(path.resolve(__dirname + '/../public/chatroom.html'));
-            console.log("Denne bruger inde på ", req.session.username);
+
+            // var userData = req.session.username;
+            // console.log("Denne bruger er logget ind med: ", userData);
+            // userArray.push(userData);
+
+            // module.exports.variableName = userData;
+            
         }
         else {
             var path = require('path')
             res.sendFile(path.resolve(__dirname + '/../public/login.html'));
         }
     })
+
 
     app.post('/login', (req, res) => {
         const username = req.body.username;
@@ -66,7 +80,7 @@ exports.userRoute = function (app, db, bodyParser, public) {
                     if (response) {
                         req.session.isLoggedIn = true;
                         req.session.username = req.body.username;
-                        req.session.id = userArray[0].id;
+                        req.session.userid = userArray[0].id;
                         res.redirect('/chatroom');
                     }
                     else {
