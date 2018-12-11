@@ -24,6 +24,7 @@ const public = app.use(express.static('public'));
 
 
 const session = require('express-session');
+
 app.use(session({
     secret: 'keyboard cat',
     resave: false,
@@ -47,7 +48,6 @@ io.on('connect', function (socket) {
 
         // var sourceFile = require('./routes/user');
         // console.log("wuhuuu", sourceFile.variableName);
-
 
         let message = data.message;
         db.Message.query().insert({ message: message }).then(console.log(message)
@@ -82,5 +82,7 @@ app.get('/', (req, res) => {
 
 // her wrapper vi hele filen i userRoutes
 const userRoutes = require('./routes/user');
+const roomRoutes = require('./routes/room');
+roomRoutes.roomRoute(app,db,bodyParser, public);
 userRoutes.userRoute(app, db, bodyParser, public);
 
