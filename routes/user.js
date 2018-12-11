@@ -100,4 +100,10 @@ exports.userRoute = function (app, db, bodyParser, public) {
         req.session.destroy();
         res.redirect('/');
     })
+
+    app.get('/addfriend', (req, res)=>{
+        var path = require('path')
+        res.sendFile(path.resolve(__dirname + "/../public/addfriend.html"))
+
+    })
 }

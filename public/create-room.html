@@ -4,19 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.slim.js"></script>
     <title>Document</title>
 </head>
 <body>
-
     <form action="/create-room" method="POST">
     <textarea id="room-name" name="roomName" placeholder="room name"></textarea>
     <p></p>
-    <button type="submit">Create</button>
+    <button id ="submit" type="submit">Create</button>
     </form>
-    
+    <text>users added: </text>
+    <text id="usersAdded"></text>
+    <p></p>
+    <text>Add users</text>
+    <form>
+    <select value="value" id="userList"></select>
+    <button id="addUserToRoom" type="submit">add</button>
+    </form>
 </body>
  
 <script>
- 
+    const socket = io();
+    socket.emit('addAllUsers');
+$('#addUserToRoom').on('click', function(d){
+    d.preventDefault();
+    if($("#userList option:selected").length > 0){
+   $("#usersAdded").append($("#userList option:selected").text(), ", ");
+   selectedUser = $("#userList option:selected").text();
+   socket.emit('addUser', selectedUser);
+   $("#userList option:selected").remove();
+    }
+})
+socket.on('hereIsTheUserList', function(data){
+    $.each(data, function(k, v){
+        $('#userList').append($("<option></option>").attr("value",v).text(v.username));
+    })
+
+
+   })
+
 </script>
 </html>

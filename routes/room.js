@@ -25,7 +25,7 @@ app.post('/create-room', (req, res) => {
         })
     }
     else {
-        res.send("Enter a room name!");
+        //res.send("Enter a room name!");
         if (req.session.isLoggedIn == true) {
             var path = require('path')
             res.sendFile(path.resolve(__dirname + '/../public/chatroom.html'));
