@@ -17,8 +17,6 @@ class Message extends Model {
                 user_id: {type: 'integer'},
                 room_id: {type: 'integer'}
             }
-
-            
         }
     }
 }
