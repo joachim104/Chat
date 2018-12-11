@@ -74,6 +74,8 @@ io.on('connection', function(socket){
     socket.on('addUser', function(data){
     db.User.query().select().from('users').where({username: data}).then(userArray =>{
         //console.log(userArray); <------- printer alt info om den bruger den har fundet, som du har selected, ud
+
+        console.log("user id: ", userArray[0].id);
     })
     
     })
