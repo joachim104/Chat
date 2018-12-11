@@ -21,13 +21,6 @@ const knex = require('knex')(knexConfig);
 
 const public = app.use(express.static('public'));
 
-// app.use(session({
-//     secret: 'keyboard cat',
-//     resave: false,
-//     saveUninitialized: true,
-//     cookie: { secure: false } // hvis sættes til false behøver vi ikke https
-// }));
-
 var appSession = session({
     secret: 'keyboard cat',
     resave: false,
@@ -47,23 +40,23 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 io.on('connect', socket => {
     socket.on('send-message', function(data) {
-        // emits to all but the socket itself
-        socket.broadcast.emit("here's the message", data);
 
-        // let userId = req.session;
+        // emits to all but the socket itself // denne her skal vi bruge i et rum med flere brugere
+        socket.broadcast.emit("here's the message", data);
+        
         let message = data.message;
 
-        console.log("DET HER ER USER", socket.handshake.session.username);
-
+        console.log(socket.handshake.session.username, "har skrevet: ", message);
+        var userInfo = socket.handshake.session.userid;
         
-        // db.Message.query().insert({ message: message }).then(console.log(message)
-        // );;
+        db.Message.query().insert({ message: message, user_id: userInfo }).then(console.log(message)
+        );;
         
         // emits to all the sockets
         // io.emit("here's the message", data);
 
 
-        // emits only to the specific socket
+        // emits only to the specific socket // denne her skal bruges i privat chat med 2 brugere
         // socket.emit("here's the message", data);
     
     })
