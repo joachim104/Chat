@@ -45,6 +45,11 @@ exports.userRoute = function (app, db, bodyParser, public) {
         res.sendFile(path.resolve(__dirname + '/../public/login.html'));
     })
 
+    app.get('/user-page', (req, res) => {
+        var path = require('path')
+        res.sendFile(path.resolve(__dirname + '/../public/user-page.html'));
+    })
+
     app.get('/chatroom', (req, res) => {
         if (req.session.isLoggedIn == true)
         {
@@ -75,7 +80,7 @@ exports.userRoute = function (app, db, bodyParser, public) {
                     if (response) {
                         req.session.isLoggedIn = true;
                         req.session.username = req.body.username;
-                        req.session.id = userArray[0].id;
+                        req.session.userid = userArray[0].id;
                         res.redirect('/chatroom');
                     }
                     else {
