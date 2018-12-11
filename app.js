@@ -3,11 +3,15 @@
 var express = require("express");
 var app = express();
 
+// app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }}));
+
 const Knex = require("knex"); // her henter vi knex. 
 const Model = require("objection").Model;
 const knexConfig = require('./knexfile').development;
 // body-parser giver adgang til req.body
 const bodyParser = require("body-parser");
+const cookieParser = require('cookie-parser');
+
 
 // server opsætning
 const server = require('http').createServer(app);
@@ -32,27 +36,30 @@ Model.knex(knex);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-io.on('connect', socket => {
-    socket.on('send-message', function(data, req) {
+
+io.on('connect', function (socket) {
+    socket.on('send-message', function (data) {
+
         // emits to all but the socket itself
         socket.broadcast.emit("here's the message", data);
 
-        // let userId = req.session;
+        // var sourceFile = require('./routes/user');
+        // console.log("wuhuuu", sourceFile.variableName);
 
-        console.log(userId);
 
         let message = data.message;
         db.Message.query().insert({ message: message }).then(console.log(message)
         );
-        
+
         // emits to all the sockets
         // io.emit("here's the message", data);
 
 
         // emits only to the specific socket
         // socket.emit("here's the message", data);
-    
+
     })
 })
 
@@ -76,3 +83,4 @@ app.get('/', (req, res) => {
 // her wrapper vi hele filen i userRoutes
 const userRoutes = require('./routes/user');
 userRoutes.userRoute(app, db, bodyParser, public);
+

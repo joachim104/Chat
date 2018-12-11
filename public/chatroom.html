@@ -37,10 +37,10 @@
             $('.chat').append('<p class="chat-message chat-message-self">' + message + '</p>'); 
             $('#message-input').val("");
         })
-        socket.on("here's the message", function(data, socketId) {
-            console.log("bliver ramt")               
+        socket.on("here's the message", function(data) {          
                     $('.chat').append('<p class="chat-message">' + data.message + '</p>');
-                    console.log("Rammer friend!");
+                    console.log("Bruger modtager besked");
+                    // console.log("data printet on client:", data);
         })
 
 
