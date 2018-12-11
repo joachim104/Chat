@@ -43,14 +43,18 @@ io.on('connect', socket => {
 
         // emits to all but the socket itself // denne her skal vi bruge i et rum med flere brugere
         socket.broadcast.emit("here's the message", data);
-        
-        let message = data.message;
 
-        console.log(socket.handshake.session.username, "har skrevet: ", message);
+        let message = data.message;
         var userInfo = socket.handshake.session.userid;
+
+        console.log(userInfo);
+        console.log(socket.handshake.session.username, "har skrevet: ", message);
         
         db.Message.query().insert({ message: message, user_id: userInfo }).then(console.log(message)
         );;
+
+        // db.Message.query().insert({ message: message }).then(console.log(message)
+        // );;
         
         // emits to all the sockets
         // io.emit("here's the message", data);
