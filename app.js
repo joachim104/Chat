@@ -58,6 +58,33 @@ io.on('connect', socket => {
     })
 })
 
+io.on('connection', function(socket){
+    socket.on('addAllUsers', function(){
+        
+        db.User.query().select('id', 'username').from('users').then(userArray => {
+            //console.log(userArray[0].username);
+
+        socket.emit('hereIsTheUserList', userArray);
+        })
+
+    socket.on('addUser', function(data){
+    db.User.query().select().from('users').where({username: data}).then(userArray =>{
+        //console.log(userArray); <------- printer alt info om den bruger den har fundet, som du har selected, ud
+    })
+    
+    })
+
+    })
+
+    socket.on('addAsFriend', function(data){
+       // console.log("here is user you clicked", data);
+        db.User.query().select().from('users').where({username: data}).then(userArray =>{
+
+            console.log("user u clicked on: ", userArray);
+        })
+    })
+})
+
 server.listen(3000, (err) => {
     if (err) throw err;
     console.log("Server is running on port 3000");

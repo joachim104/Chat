@@ -5,10 +5,12 @@ exports.up = function(knex, Promise) {
             table.increments('id').primary();
             table.string('username');
             table.string('password');
+            table.string("friendlist");
         })
         .createTable('rooms', function(table) {
             table.increments('id').primary();
             table.string('name');
+            
         })
         .createTable('messages', function(table) {
             table.increments('id').primary();

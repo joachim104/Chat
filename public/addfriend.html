@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.slim.js"></script>
+    <title>Add friend</title>
+</head>
+<body>
+    <form>
+<text>Users: </text>
+<select value ="value" id="userList"></select>
+<p></p>
+<button id="addUserAsFriend">Add as friend</button>
+    </form>
+</body>
+
+<script>
+const socket = io();
+socket.emit('addAllUsers');
+
+socket.on('hereIsTheUserList', function(data){
+    $.each(data, function(k, v){
+        $('#userList').append($("<option></option>").attr("value",v).text(v.username));
+    })
+})
+
+$('#addUserAsFriend').on('click', function(a){
+    a.preventDefault();
+    if($("#userList option:selected").length > 0){
+    selectedFriend = $("#userList option:selected").text();
+    socket.emit('addAsFriend', selectedFriend);
+    $("#userList option:selected").remove();
+    }
+})
+
+
+</script>
+</html>
