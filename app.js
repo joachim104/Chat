@@ -30,7 +30,7 @@ var appSession = session({
 
 app.use(appSession)
 
-io.use(sharedsession(appSession))   
+io.use(sharedsession(appSession))
 
 // connect knex with objection and put query methods on the models
 Model.knex(knex);
@@ -39,7 +39,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 io.on('connect', socket => {
-    socket.on('send-message', function(data) {
+
+    const room1 = "user-admin-";
+    // const room2 = "admin";
+
+    if (room1.includes(socket.handshake.session.username + "-")){
+        socket.join(room1);
+    }
+
+    io.to(room1).emit('room message', {"navn": "lars"});
+
+    socket.on('send-message', function (data) {
 
         // emits to all but the socket itself // denne her skal vi bruge i et rum med flere brugere
         socket.broadcast.emit("here's the message", data);
@@ -49,43 +59,45 @@ io.on('connect', socket => {
 
         console.log(userInfo);
         console.log(socket.handshake.session.username, "har skrevet: ", message);
-        
+
         db.Message.query().insert({ message: message, user_id: userInfo, room_id: 1 }).then(console.log(message)
         );
-        
+
         // emits to all the sockets
         // io.emit("here's the message", data);
 
 
         // emits only to the specific socket // denne her skal bruges i privat chat med 2 brugere
         // socket.emit("here's the message", data);
-    
+
     })
 })
 
-io.on('connection', function(socket){
-    socket.on('addAllUsers', function(){
-        
+io.on('connection', function (socket) {
+    socket.on('addAllUsers', function () {
+
         db.User.query().select('id', 'username').from('users').then(userArray => {
             //console.log(userArray[0].username);
 
-        socket.emit('hereIsTheUserList', userArray);
+            socket.emit('hereIsTheUserList', userArray);
         })
 
-    socket.on('addUser', function(data){
-    db.User.query().select().from('users').where({username: data}).then(userArray =>{
-        //console.log(userArray); <------- printer alt info om den bruger den har fundet, som du har selected, ud
+        socket.on('addUser', function (data) {
+            db.User.query().select().from('users').where({ username: data }).then(userArray => {
+                //console.log(userArray); <------- printer alt info om den bruger den har fundet, som du har selected, ud
 
-        console.log("user id: ", userArray[0].id);
-    })
-    
-    })
+                
+
+                console.log("user id: ", userArray[0].id);
+            })
+
+        })
 
     })
 
-    socket.on('addAsFriend', function(data){
-       // console.log("here is user you clicked", data);
-        db.User.query().select().from('users').where({username: data}).then(userArray =>{
+    socket.on('addAsFriend', function (data) {
+        // console.log("here is user you clicked", data);
+        db.User.query().select().from('users').where({ username: data }).then(userArray => {
 
             console.log("user u clicked on: ", userArray);
         })
@@ -112,5 +124,5 @@ app.get('/', (req, res) => {
 // her wrapper vi hele filen i userRoutes
 const userRoutes = require('./routes/user');
 const roomRoutes = require('./routes/room');
-roomRoutes.roomRoute(app,db,bodyParser, public);
+roomRoutes.roomRoute(app, db, bodyParser, public);
 userRoutes.userRoute(app, db, bodyParser, public);

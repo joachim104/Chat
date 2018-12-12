@@ -31,8 +31,9 @@ $('#addUserToRoom').on('click', function(d){
     d.preventDefault();
     if($("#userList option:selected").length > 0){
    $("#usersAdded").append($("#userList option:selected").text(), ", ");
+   usersAdded = $("#usersAdded").val();
    selectedUser = $("#userList option:selected").text();
-   socket.emit('addUser', selectedUser);
+   socket.emit('addUser', selectedUser, usersAdded);
    $("#userList option:selected").remove();
     }
 })

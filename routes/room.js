@@ -18,6 +18,7 @@ app.post('/create-room', (req, res) => {
             } else {
                 db.Room.query().insert({ name }).then(persistedData => {
                     console.log("everything went well");
+                    console.log(persistedData);
                     res.send({ "status": 200, "response": "everything went well" });
                 })
 
