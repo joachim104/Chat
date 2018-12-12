@@ -45,6 +45,7 @@ io.on('connect', socket => {
 
     if (room1.includes(socket.handshake.session.username + "-")){
         socket.join(room1);
+        console.log("det her er room: ", room1)
     }
 
     io.to(room1).emit('room message', {"navn": "lars"});
