@@ -31,6 +31,11 @@
 
     <script>
         const socket = io.connect('http://localhost:3000')
+        
+        socket.on("room message", function(data) {
+            console.log(data);
+        });
+
         $('#btn').on('click', event => {
             const message = $('#message-input').val();
             socket.emit('send-message', { message });
