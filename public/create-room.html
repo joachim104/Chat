@@ -10,7 +10,7 @@
 </head>
 <body>
     <form action="/create-room" method="POST">
-    <textarea id="room-name" name="roomName" placeholder="room name"></textarea>
+    <input id="room-name" name="roomName" placeholder="room name"></input>
     <p></p>
     <button id ="submit" type="submit">Create</button>
     </form>
@@ -32,6 +32,7 @@ $('#addUserToRoom').on('click', function(d){
     if($("#userList option:selected").length > 0){
    $("#usersAdded").append($("#userList option:selected").text(), ", ");
    selectedUser = $("#userList option:selected").text();
+   usersAdded = usersAdded + $("#usersAdded").text();
    socket.emit('addUser', selectedUser);
    $("#userList option:selected").remove();
     }
@@ -40,7 +41,15 @@ socket.on('hereIsTheUserList', function(data){
     $.each(data, function(k, v){
         $('#userList').append($("<option></option>").attr("value",v).text(v.username));
     })
+   })
 
+   $("#submit").on('click', function(){
+
+    if(usersAdded.length > 0 && $("#room-name").val()){
+        socket.emit('createRoom', $("#room-name").val());
+
+
+    }
 
    })
 
