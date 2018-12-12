@@ -81,7 +81,7 @@ exports.userRoute = function (app, db, bodyParser, public) {
                         req.session.isLoggedIn = true;
                         req.session.username = req.body.username;
                         req.session.userid = userArray[0].id;
-                        res.redirect('/chatroom');
+                        res.redirect('/');
                     }
                     else {
                         res.send({ "status": 403, "response": "unauthorized" })

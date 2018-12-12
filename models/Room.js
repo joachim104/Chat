@@ -14,7 +14,8 @@ class Room extends Model {
 
             properties: {
                 id: {type: 'integer'},
-                name: {type: 'string'}
+                name: {type: 'string'},
+                room_name_id: {type: "string"}
             }
         }
     } 

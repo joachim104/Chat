@@ -1,15 +1,22 @@
 exports.roomRoute = function (app, db, bodyParser, public) {
 
 app.get('/create-room', (req, res) => {
+    if(req.session.isLoggedIn === true) {
 
     var path = require('path');
     res.sendFile(path.resolve(__dirname + "/../public/create-room.html"));
+
+    }
+    else {
+        var path = require('path')
+            res.sendFile(path.resolve(__dirname + '/../public/login.html'));
+    }
 })
 
 app.post('/create-room', (req, res) => {
     const name = req.body.roomName;
 
-    if (name) {
+    if (name && req.session.isLoggedIn === true) {
 
         db.Room.query().select().where({ name }).then(userArray => {
             if (userArray.length > 0) {

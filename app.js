@@ -89,9 +89,6 @@ io.on('connection', function(socket){
         //console.log(userArray); <------- printer alt info om den bruger den har fundet, som du har selected, ud
     addedUsers.push(userArray[0].username);
     roomNameString = roomNameString +  userArray[0].username + "-";
-
-    console.log(roomNameString);
-
         //console.log("user id: ", userArray[0].id);
     })
     
@@ -101,7 +98,9 @@ io.on('connection', function(socket){
 
     socket.on('createRoom', function(roomName){
         console.log("roomname is: ", roomName, "added users is: ", addedUsers)
+        const activeUser = socket.handshake.session.username
 
+        db.Room.query().insert({ name: roomName, room_name_id: activeUser + "-" + roomNameString}).then()
         
     })
 

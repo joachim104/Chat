@@ -17,7 +17,7 @@ exports.up = function(knex, Promise) {
         .createTable('rooms', function(table) {
             table.increments('id').primary();
             table.string('name');
-            
+            table.string("room_name_id")
         })
         .createTable('messages', function(table) {
             table.increments('id').primary();
@@ -27,13 +27,6 @@ exports.up = function(knex, Promise) {
             table.foreign('user_id').references('users.id');
             table.foreign('room_id').references('rooms.id');
         })
-        .createTable('user_rooms', function(table) {
-            table.increments('id').primary();
-            table.integer('room_id').unsigned().notNullable()
-            table.integer('user_id').unsigned().notNullable()
-            table.foreign('user_id').references('users.id');
-            table.foreign('room_id').references('rooms.id');
-        });
 };
 
 exports.down = function(knex, Promise) {
@@ -41,6 +34,5 @@ exports.down = function(knex, Promise) {
   	.dropTableIfExists('users')
   	.dropTableIfExists('messages')
   	.dropTableIfExists('rooms')
-    .dropTableIfExists('user_rooms')
     .dropTableIfExists("friend_list");
 };
