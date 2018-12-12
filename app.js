@@ -74,31 +74,41 @@ io.on('connect', socket => {
     })
 })
 
-io.on('connection', function (socket) {
-    socket.on('addAllUsers', function () {
-
+io.on('connection', function(socket){
+    addedUsers = [];
+    roomNameString = "";
+    socket.on('addAllUsers', function(){
+        
         db.User.query().select('id', 'username').from('users').then(userArray => {
             //console.log(userArray[0].username);
 
             socket.emit('hereIsTheUserList', userArray);
         })
 
-        socket.on('addUser', function (data) {
-            db.User.query().select().from('users').where({ username: data }).then(userArray => {
-                //console.log(userArray); <------- printer alt info om den bruger den har fundet, som du har selected, ud
+    socket.on('addUser', function(data){
+    db.User.query().select().from('users').where({username: data}).then(userArray =>{
+        //console.log(userArray); <------- printer alt info om den bruger den har fundet, som du har selected, ud
+    addedUsers.push(userArray[0].username);
+    roomNameString = roomNameString +  userArray[0].username + "-";
 
-                
+    console.log(roomNameString);
 
-                console.log("user id: ", userArray[0].id);
-            })
-
-        })
+        //console.log("user id: ", userArray[0].id);
+    })
+    
+    })
 
     })
 
-    socket.on('addAsFriend', function (data) {
-        // console.log("here is user you clicked", data);
-        db.User.query().select().from('users').where({ username: data }).then(userArray => {
+    socket.on('createRoom', function(roomName){
+        console.log("roomname is: ", roomName, "added users is: ", addedUsers)
+
+        
+    })
+
+    socket.on('addAsFriend', function(data){
+       // console.log("here is user you clicked", data);
+        db.User.query().select().from('users').where({username: data}).then(userArray =>{
 
             console.log("user u clicked on: ", userArray);
         })
