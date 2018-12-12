@@ -52,7 +52,15 @@ socket.on('hereIsTheUserList', function(data){
 
     }
 
-   })
+})
+socket.on("roomExists", function(){
+    alert("Room already exists!");
+})
+
+socket.on("roomCreatedSucess", function(){
+    alert("Sucess!");
+    window.location.replace("./index.html");
+})
 
 </script>
 </html>
