@@ -87,7 +87,7 @@ io.on('connection', function(socket){
 
     socket.on('addUser', function(data){
     db.User.query().select().from('users').where({username: data}).then(userArray =>{
-        //console.log(userArray); <------- printer alt info om den bruger den har fundet, som du har selected, ud
+
     addedUsers.push(userArray[0].username);
     roomNameString = roomNameString +  userArray[0].username + "-";
 
@@ -103,6 +103,7 @@ io.on('connection', function(socket){
     socket.on('createRoom', function(roomName){
         console.log("roomname is: ", roomName, "added users is: ", addedUsers)
 
+        // db.RoomUser.
         
     })
 
