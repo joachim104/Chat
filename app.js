@@ -102,9 +102,21 @@ io.on('connection', function (socket) {
         // console.log("roomname is: ", roomName, "added users is: ", addedUsers)
         const activeUser = socket.handshake.session.username
 
-        // db.Room.query().insert({ name: roomName, room_name_id: activeUser + "-" + roomNameString }).then()
-
+        db.Room.query().select().where({ name: roomName }).then(userArray => {
+            if (userArray.length > 0) {
+                console.log("here is userarray: ", userArray);
+                console.log("room name already exists")
+            socket.emit("roomExists");
+                
+            } else {
+                db.Room.query().insert({ name: roomName, room_name_id: activeUser + "-" + roomNameString}).then()
+                socket.emit("roomCreatedSucess");
+               
+               
+            }
+        
     })
+})
 
     socket.on('addAsFriend', function (data) {
         // console.log("here is user you clicked", data);
