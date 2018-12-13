@@ -41,28 +41,37 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // -----------------------------------------------------------------------------------
 io.on('connect', socket => {
 
-    const room1 = "user-admin-";
-    // const room2 = "admin";
+    const activeChatroomsArray = [];
 
-    if (room1.includes(socket.handshake.session.username + "-")) {
-        socket.join(room1);
-        console.log("det her er room: ", room1)
-    }
-
-    io.to(room1).emit('room message', { "navn": "lars" });
+    db.User.query().select('room_name_id').from('rooms').then(roomArray => {
+        roomArray.forEach(roomName => {
+            let stringRoom = JSON.stringify(roomName);
+            if (stringRoom.includes(socket.handshake.session.username + "-")) {
+                socket.join(stringRoom);
+                activeChatroomsArray.push(stringRoom);
+                console.log("det her er room: ", stringRoom)
+            }
+            socket.on('users-chatroom-list', function (data) {
+                console.log("DATA: ".data);
+                socket.emit(data);
+            });
+        });
+    });
+    
+    // io.to(stringRoom).emit('room message', { "navn": "lars" });
 
     socket.on('send-message', function (data) {
-
         // emits to all but the socket itself // denne her skal vi bruge i et rum med flere brugere
         socket.broadcast.emit("here's the message", data);
 
         let message = data.message;
         var userInfo = socket.handshake.session.userid;
 
-        // console.log(userInfo);
         console.log(socket.handshake.session.username, "har skrevet: ", message);
 
-        db.Message.query().insert({ message: message, user_id: userInfo, room_id: 1 }).then(console.log("")
+
+        // OBS. her skal userinfo og room id gøres dynamisk istedet!!
+        db.Message.query().insert({ message: message, user_id: userInfo, room_id: 18 }).then(console.log("")
         );
 
 
