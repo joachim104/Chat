@@ -63,6 +63,9 @@ io.on('connect', socket => {
         db.Message.query().insert({ message: message, user_id: userInfo, room_id: 1 }).then(console.log(message)
         );
 
+
+        
+
         // emits to all the sockets
         // io.emit("here's the message", data);
 
@@ -88,8 +91,6 @@ io.on('connection', function(socket){
     db.User.query().select().from('users').where({username: data}).then(userArray =>{
         //console.log(userArray); <------- printer alt info om den bruger den har fundet, som du har selected, ud
     addedUsers.push(userArray[0].username);
-    roomNameString = roomNameString +  userArray[0].username + "-";
-        //console.log("user id: ", userArray[0].id);
     })
     
     })
@@ -98,7 +99,9 @@ io.on('connection', function(socket){
 
     socket.on('createRoom', function(roomName){
         console.log("roomname is: ", roomName, "added users is: ", addedUsers)
-        const activeUser = socket.handshake.session.username
+        addedUsers.push(socket.handshake.session.username)
+
+        let roomNameString = ""
 
         db.Room.query().select().where({ name: roomName }).then(userArray => {
             if (userArray.length > 0) {
@@ -107,7 +110,16 @@ io.on('connection', function(socket){
             socket.emit("roomExists");
                 
             } else {
-                db.Room.query().insert({ name: roomName, room_name_id: activeUser + "-" + roomNameString}).then()
+
+                if(addedUsers.indexOf(socket.handshake.session.username) > -1) {
+                    addedUsers.splice(socket.handshake.session.username, 1)
+                }
+
+                addedUsers.forEach(element => {
+                    roomNameString = roomNameString + element + "-"
+                });
+
+                db.Room.query().insert({ name: roomName, room_name_id: roomNameString}).then()
                 socket.emit("roomCreatedSucess");
                
                
