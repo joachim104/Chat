@@ -59,10 +59,10 @@ io.on('connect', socket => {
         let message = data.message;
         var userInfo = socket.handshake.session.userid;
 
-        console.log(userInfo);
+        // console.log(userInfo);
         console.log(socket.handshake.session.username, "har skrevet: ", message);
 
-        db.Message.query().insert({ message: message, user_id: userInfo, room_id: 1 }).then(console.log(message)
+        db.Message.query().insert({ message: message, user_id: userInfo, room_id: 1 }).then(console.log("")
         );
 
         // emits to all the sockets
