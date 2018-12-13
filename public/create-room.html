@@ -66,7 +66,6 @@ socket.on('hereIsTheUserList', function(data){
     if(usersAdded.length > 0 && $("#room-name").val()){
         socket.emit('createRoom', $("#room-name").val());
 
-
     }
 
 })

@@ -50,12 +50,30 @@
                                     <th style="width:50%">Room name</th>
                                     <th style="width:50%">Members</th>
                                   </tr>
-                                  <tr>
-                                    <td id="roomName">Room name here</td>
-                                    <td id="Members">Members here</td>
-                                  </tr>
+                                  
+                                  <div id="newRooms">
+                                  
+                                </div>
+                                
                                   </table>
         <div id="footer"></div>
+
+
+
+<script>
+var socket = io();
+
+socket.emit("user-page-loaded");
+
+socket.on('rooms-found-with-membership', function(roomNames, roomIDs){
+console.log(roomNames, roomIDs);
+
+$.each(roomNames, function(k,v){
+        $('#newRooms').append('<a href = "chatroom.html"' + '<div>' + '<tr>' + '<td>' + v + '</td>' + '</tr>' + '</div>' +'</a>');
+    })
+
+})
+</script>
     
 </body>
 </html>

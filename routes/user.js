@@ -26,9 +26,8 @@ exports.userRoute = function (app, db, bodyParser, public) {
                     bcrypt.hash(password, saltRounds).then(function (hash) {
                         // INSERT INTO users('user', 'password') VALUES('?', '?');
                         db.User.query().insert({ username, password: hash }).then(persistedData => {
-                            req.session.isLoggedIn = true;
                             // res.send({ "status": 200, "response": "everything went well" });
-                            res.redirect('/chatroom');
+                            res.redirect('/login');
                         });
                     });
                 }
@@ -79,14 +78,7 @@ exports.userRoute = function (app, db, bodyParser, public) {
                         req.session.isLoggedIn = true;
                         req.session.username = req.body.username;
                         req.session.userid = userArray[0].id;
-<<<<<<< HEAD
-                        res.sendFile(path.resolve(__dirname + "/../public/user-page.html"));
-=======
-                        res.redirect('/index.html');
->>>>>>> ce3c07e13ed0d6f58d09cff7313c80917f76b1c9
-                    }
-                    else {
-                        res.send({ "status": 403, "response": "unauthorized" })
+                        res.sendFile(path.resolve(__dirname + '/../public/index.html'));
                     }
                 })
             }
@@ -103,13 +95,9 @@ exports.userRoute = function (app, db, bodyParser, public) {
         res.redirect('/');
     })
 
-<<<<<<< HEAD
     app.get('/addfriend', (req, res)=>{
 
         if (req.session.isLoggedIn == true){
-=======
-    app.get('/addfriend', (req, res) => {
->>>>>>> ce3c07e13ed0d6f58d09cff7313c80917f76b1c9
         var path = require('path')
         res.sendFile(path.resolve(__dirname + "/../public/addfriend.html"))
         }else{

@@ -64,10 +64,6 @@ io.on('connect', socket => {
 
         db.Message.query().insert({ message: message, user_id: userInfo, room_id: 1 }).then(console.log(message)
         );
-
-
-        
-
         // emits to all the sockets
         // io.emit("here's the message", data);
 
@@ -81,6 +77,9 @@ io.on('connect', socket => {
 io.on('connection', function (socket) {
     addedUsers = [];
     roomNameString = "";
+    allRoomNamesFromDB = [];
+    roomNamesFoundWithMembership = [];
+    roomIDsFoundWithMembership = [];
     socket.on('addAllUsers', function () {
 
         db.User.query().select('id', 'username').from('users').then(userArray => {
@@ -95,6 +94,27 @@ io.on('connection', function (socket) {
     addedUsers.push(userArray[0].username);
     })
     
+    })
+
+    })
+
+    socket.on('user-page-loaded', function(){
+    currentUser = socket.handshake.session.username;
+    db.Room.query().select('name', 'room_name_id').from('rooms').then(allRoomNames =>{
+    allRoomNamesFromDB = allRoomNames;
+
+       for(i = 0; i<allRoomNamesFromDB.length; i++){
+
+        if(allRoomNamesFromDB[i].room_name_id.includes(currentUser)){
+
+            console.log("match fundet: ", allRoomNamesFromDB[i].room_name_id, " ", currentUser)
+            roomNamesFoundWithMembership.push(allRoomNamesFromDB[i].name);
+            roomIDsFoundWithMembership.push(allRoomNamesFromDB[i].room_name_id);
+        }
+       }
+
+       socket.emit('rooms-found-with-membership', roomNamesFoundWithMembership, roomIDsFoundWithMembership);
+
     })
 
     })
@@ -123,10 +143,8 @@ io.on('connection', function (socket) {
 
                 db.Room.query().insert({ name: roomName, room_name_id: roomNameString}).then()
                 socket.emit("roomCreatedSucess");
-               
-               
+                 
             }
-        
     })
 })
 
