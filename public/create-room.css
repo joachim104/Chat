@@ -1,0 +1,15 @@
+.chat-form button {
+    background: #15BDED;
+    padding: 5px 15px;
+    font-size: 15px;
+    color: #fff;
+    border: none;
+    margin: 0 10px;
+    border-radius: 3px;
+    box-shadow: 0 3px 0 #15BDED;
+    cursor: pointer;
+/* 
+    -webkit-transition: background .2s ease;
+    -moz-transition: background .2s ease;
+    -o-transition: background .2s ease; */
+}

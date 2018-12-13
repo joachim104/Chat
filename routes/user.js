@@ -46,8 +46,14 @@ exports.userRoute = function (app, db, bodyParser, public) {
     })
 
     app.get('/user-page', (req, res) => {
-        var path = require('path')
-        res.sendFile(path.resolve(__dirname + '/../public/user-page.html'));
+        if(req.session.isLoggedIn == true){
+
+            var path = require('path')
+            res.sendFile(path.resolve(__dirname + '/../public/user-page.html'));
+        }else{
+            var path = require('path')
+            res.sendFile(path.resolve(__dirname + '/../public/login.html'));
+        }
     })
 
     app.get('/chatroom', (req, res) => {
@@ -78,10 +84,11 @@ exports.userRoute = function (app, db, bodyParser, public) {
             if (userArray.length > 0) {
                 bcrypt.compare(password, userArray[0].password).then(response => {
                     if (response) {
+                        var path = require("path");
                         req.session.isLoggedIn = true;
                         req.session.username = req.body.username;
                         req.session.userid = userArray[0].id;
-                        res.redirect('/');
+                        res.sendFile(path.resolve(__dirname + "/../public/user-page.html"));
                     }
                     else {
                         res.send({ "status": 403, "response": "unauthorized" })
@@ -102,8 +109,14 @@ exports.userRoute = function (app, db, bodyParser, public) {
     })
 
     app.get('/addfriend', (req, res)=>{
+
+        if (req.session.isLoggedIn == true){
         var path = require('path')
         res.sendFile(path.resolve(__dirname + "/../public/addfriend.html"))
+        }else{
+            var path = require('path')
+            res.sendFile(path.resolve(__dirname + '/../public/login.html'));
+            }
 
     })
 }
