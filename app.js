@@ -38,17 +38,18 @@ Model.knex(knex);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// -----------------------------------------------------------------------------------
 io.on('connect', socket => {
 
     const room1 = "user-admin-";
     // const room2 = "admin";
 
-    if (room1.includes(socket.handshake.session.username + "-")){
+    if (room1.includes(socket.handshake.session.username + "-")) {
         socket.join(room1);
         console.log("det her er room: ", room1)
     }
 
-    io.to(room1).emit('room message', {"navn": "lars"});
+    io.to(room1).emit('room message', { "navn": "lars" });
 
     socket.on('send-message', function (data) {
 
@@ -74,42 +75,40 @@ io.on('connect', socket => {
     })
 })
 
-io.on('connection', function(socket){
+io.on('connection', function (socket) {
     addedUsers = [];
     roomNameString = "";
-    socket.on('addAllUsers', function(){
-        
+    socket.on('addAllUsers', function () {
+
         db.User.query().select('id', 'username').from('users').then(userArray => {
             //console.log(userArray[0].username);
 
             socket.emit('hereIsTheUserList', userArray);
         })
 
-    socket.on('addUser', function(data){
-    db.User.query().select().from('users').where({username: data}).then(userArray =>{
+        socket.on('addUser', function (data) {
+            db.User.query().select().from('users').where({ username: data }).then(userArray => {
 
-    addedUsers.push(userArray[0].username);
-    roomNameString = roomNameString +  userArray[0].username + "-";
+                addedUsers.push(userArray[0].username);
+                roomNameString = roomNameString + userArray[0].username + "-";
+                //console.log("user id: ", userArray[0].id);
+            })
 
-    console.log(roomNameString);
-
-        //console.log("user id: ", userArray[0].id);
-    })
-    
-    })
+        })
 
     })
 
-    socket.on('createRoom', function(roomName){
-        console.log("roomname is: ", roomName, "added users is: ", addedUsers)
+    socket.on('createRoom', function (roomName) {
+        // console.log("roomname is: ", roomName, "added users is: ", addedUsers)
+        const activeUser = socket.handshake.session.username
 
-        // db.RoomUser.
-        
+        // db.Room.query().insert({ name: roomName, room_name_id: activeUser + "-" + roomNameString }).then()
+
     })
 
-    socket.on('addAsFriend', function(data){
-       // console.log("here is user you clicked", data);
-        db.User.query().select().from('users').where({username: data}).then(userArray =>{
+    socket.on('addAsFriend', function (data) {
+        // console.log("here is user you clicked", data);
+        db.User.query().select().from('users').where({ username: data }).then(userArray => {
 
             console.log("user u clicked on: ", userArray);
         })
