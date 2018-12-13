@@ -30,7 +30,7 @@
     </div>
 
     <script>
-        const socket = io.connect('http://localhost:3000')
+        const socket = io.connect('http://localhost:3000/')
         
         socket.on("room message", function(data) {
             console.log(data);

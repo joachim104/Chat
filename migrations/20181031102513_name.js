@@ -4,7 +4,6 @@ exports.up = function(knex, Promise) {
             table.increments('id').primary();
             table.string('username');
             table.string('password');
-            table.string("friendlist");
         })
         .createTable("friend_list", function(table){
             table.increments("id").primary();

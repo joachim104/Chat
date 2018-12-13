@@ -29,7 +29,7 @@ exports.userRoute = function (app, db, bodyParser, public) {
                             req.session.isLoggedIn = true;
                             // res.send({ "status": 200, "response": "everything went well" });
                             res.redirect('/chatroom');
-                        });
+                        })
                     });
                 }
             })
@@ -46,18 +46,24 @@ exports.userRoute = function (app, db, bodyParser, public) {
     })
 
     app.get('/user-page', (req, res) => {
-        if (req.session.isLoggedIn == true) {
+        if(req.session.isLoggedIn == true){
+
             var path = require('path')
             res.sendFile(path.resolve(__dirname + '/../public/user-page.html'));
-        }
-        else {
+        }else{
             var path = require('path')
             res.sendFile(path.resolve(__dirname + '/../public/login.html'));
         }
     })
 
-    app.get('/chatroom', (req, res) => {
-        if (req.session.isLoggedIn == true) {
+    // express dynamic url param
+    app.get('/chatroom/:roomName', (req, res) => {
+        const roomName = "admin-user-";
+
+        if (req.session.isLoggedIn == true && roomName.indexOf(req.session.username)) {
+            // når vi har roomname så hent alle beskeder i db der matcher det roomname 
+            // og sender beskederne videre med
+            console.log(req.params.roomName);
             var path = require('path')
             res.sendFile(path.resolve(__dirname + '/../public/chatroom.html'));
         }
@@ -75,6 +81,7 @@ exports.userRoute = function (app, db, bodyParser, public) {
             if (userArray.length > 0) {
                 bcrypt.compare(password, userArray[0].password).then(response => {
                     if (response) {
+                        var path = require("path");
                         req.session.isLoggedIn = true;
                         req.session.username = req.body.username;
                         req.session.userid = userArray[0].id;
@@ -98,9 +105,15 @@ exports.userRoute = function (app, db, bodyParser, public) {
         res.redirect('/');
     })
 
-    app.get('/addfriend', (req, res) => {
+    app.get('/addfriend', (req, res)=>{
+
+        if (req.session.isLoggedIn == true){
         var path = require('path')
         res.sendFile(path.resolve(__dirname + "/../public/addfriend.html"))
+        }else{
+            var path = require('path')
+            res.sendFile(path.resolve(__dirname + '/../public/login.html'));
+            }
 
     })
 }

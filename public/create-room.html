@@ -6,25 +6,42 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.slim.js"></script>
-    <title>Document</title>
+    <title>Create room</title>
+    <link rel="stylesheet" type="text/css" href="create-room.css">
+    <script src="main.js"></script>
 </head>
 <body>
+    <div id="header"></div>
     <form action="/create-room" method="POST">
-    <input id="room-name" name="roomName" placeholder="room name"></input>
+        <div class="form-group" style ="width:10%">
+    <input style="text-align:center;" class="form-control" id="room-name" name="roomName" placeholder="room name"></input>
+        </div>
     <p></p>
+    <div class="chat-form">
     <button id ="submit" type="submit">Create</button>
+    </div>
     </form>
-    <text>users added: </text>
-    <text id="usersAdded"></text>
+    <div class="container">
+            <p id="usersAdded"class="bg-info">Users added: </p>
+          </div>
     <p></p>
-    <text>Add users</text>
     <form>
-    <select value="value" id="userList"></select>
+            <div class="form-group" style="width:7%">
+    <select class="form-control" value="value" id="userList"></select>
+    <div class="chat-form">
     <button id="addUserToRoom" type="submit">add</button>
+    </div>
+            </div>
     </form>
 </body>
  
 <script>
+
+$("#room-name").offset({ top: 40, left: 875 });
+$("#userList").offset({top: 115, left: 905})
+$("#addUserToRoom").offset({top: 150, left: 890})
+$("#submit").offset({top: 159, left: 975})
+
     const socket = io();
     socket.emit('addAllUsers');
 $('#addUserToRoom').on('click', function(d){
@@ -63,4 +80,5 @@ socket.on("roomCreatedSucess", function(){
 })
 
 </script>
+<div id="footer"></div>
 </html>
