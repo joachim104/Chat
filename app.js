@@ -39,30 +39,42 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // -----------------------------------------------------------------------------------
-io.on('connect', socket => {
+io.on('connection', function (socket) {
 
-    const room1 = "user-admin-";
-    // const room2 = "admin";
 
-    if (room1.includes(socket.handshake.session.username + "-")) {
-        socket.join(room1);
-        console.log("det her er room: ", room1)
-    }
+    console.log("DETTER ER CHATROOM SOCKET DER KØRE BLA BLA BLA");
 
-    io.to(room1).emit('room message', { "navn": "lars" });
+    console.log(socket.handshake.session.username);
+    
+
+    const activeChatroomsArray = [];
+
+    db.User.query().select('room_name_id').from('rooms').then(roomArray => {
+        roomArray.forEach(roomName => {
+            let stringRoom = JSON.stringify(roomName);
+            if (stringRoom.includes(socket.handshake.session.username + "-")) {
+                socket.join(stringRoom);
+                activeChatroomsArray.push(stringRoom);
+                console.log("det her er room: ", stringRoom)
+            }
+        });
+        socket.emit('users-chatroom-list', activeChatroomsArray);
+    });
+    
+    // io.to(stringRoom).emit('room message', { "navn": "lars" });
 
     socket.on('send-message', function (data) {
-
         // emits to all but the socket itself // denne her skal vi bruge i et rum med flere brugere
         socket.broadcast.emit("here's the message", data);
 
         let message = data.message;
         var userInfo = socket.handshake.session.userid;
 
-        console.log(userInfo);
         console.log(socket.handshake.session.username, "har skrevet: ", message);
 
-        db.Message.query().insert({ message: message, user_id: userInfo, room_id: 1 }).then(console.log(message)
+
+        // OBS. her skal userinfo og room id gøres dynamisk istedet!!
+        db.Message.query().insert({ message: message, user_id: userInfo, room_id: 18 }).then(console.log("")
         );
         // emits to all the sockets
         // io.emit("here's the message", data);
@@ -153,6 +165,18 @@ io.on('connection', function (socket) {
         db.User.query().select().from('users').where({ username: data }).then(userArray => {
 
             console.log("user u clicked on: ", userArray);
+
+            let userId = parseInt(socket.handshake.session.userid, 10)
+
+            console.log("DET HER ER ID USER :: ", socket.handshake.session.userid);
+            
+            console.log(userId);
+            
+            if (!isNaN(userId)) {
+                console.log(userId);
+                db.FriendList.query().insert({ user_id: userId, friend_id: userArray[0].id}).then(console.log(""))
+            }
+
         })
     })
 })
@@ -167,7 +191,8 @@ const db = {
     "knex": knex,
     "User": require("./models/User"),
     "Message": require("./models/Message"),
-    "Room": require("./models/Room")
+    "Room": require("./models/Room"),
+    "FriendList": require("./models/FriendList")
 };
 
 app.get('/', (req, res) => {

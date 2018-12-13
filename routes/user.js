@@ -55,8 +55,14 @@ exports.userRoute = function (app, db, bodyParser, public) {
         }
     })
 
-    app.get('/chatroom', (req, res) => {
-        if (req.session.isLoggedIn == true) {
+    // express dynamic url param
+    app.get('/chatroom/:roomName', (req, res) => {
+        const roomName = "admin-user-";
+
+        if (req.session.isLoggedIn == true && roomName.indexOf(req.session.username)) {
+            // når vi har roomname så hent alle beskeder i db der matcher det roomname 
+            // og sender beskederne videre med
+            console.log(req.params.roomName);
             var path = require('path')
             res.sendFile(path.resolve(__dirname + '/../public/chatroom.html'));
         }
