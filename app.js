@@ -39,15 +39,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // -----------------------------------------------------------------------------------
-io.on('connect', socket => {
+io.on('connection', function (socket) {
 
-    const room1 = "user-admin-";
-    // const room2 = "admin";
 
-    if (room1.includes(socket.handshake.session.username + "-")) {
-        socket.join(room1);
-        console.log("det her er room: ", room1)
-    }
+    console.log("DETTER ER CHATROOM SOCKET DER KØRE BLA BLA BLA");
+
+    console.log(socket.handshake.session.username);
+    
+
+    const room1 = "user-admin-";    
+
+    // if (room1.includes(socket.handshake.session.username + "-")) {
+    //     socket.join(room1);
+    //     console.log("det her er room: ", room1)
+    // }
 
     io.to(room1).emit('room message', { "navn": "lars" });
 
@@ -135,6 +140,18 @@ io.on('connection', function (socket) {
         db.User.query().select().from('users').where({ username: data }).then(userArray => {
 
             console.log("user u clicked on: ", userArray);
+
+            let userId = parseInt(socket.handshake.session.userid, 10)
+
+            console.log("DET HER ER ID USER :: ", socket.handshake.session.userid);
+            
+            console.log(userId);
+            
+            if (!isNaN(userId)) {
+                console.log(userId);
+                db.FriendList.query().insert({ user_id: userId, friend_id: userArray[0].id}).then(console.log(""))
+            }
+
         })
     })
 })
@@ -149,7 +166,8 @@ const db = {
     "knex": knex,
     "User": require("./models/User"),
     "Message": require("./models/Message"),
-    "Room": require("./models/Room")
+    "Room": require("./models/Room"),
+    "FriendList": require("./models/FriendList")
 };
 
 app.get('/', (req, res) => {

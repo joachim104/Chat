@@ -2,7 +2,7 @@ const Model = require("objection").Model;
 
 class FriendList extends Model {
     static get tableName() {
-        return 'room_user';
+        return 'friend_list';
       }
 
       // denne funktion er en måde hvorpå databasens objekter bliver repræsenteret i Json-format
@@ -13,8 +13,8 @@ class FriendList extends Model {
 
             properties: {
                 id: {type: 'integer'},
-                room_id: {type: 'integer'},
-                user_id: {type: 'integer'}
+                user_id: {type: 'integer'},
+                friend_id: {type: 'integer'}
 
             }
 
@@ -23,4 +23,4 @@ class FriendList extends Model {
     }
 }
 
-module.exports = RoomUser;
+module.exports = FriendList;

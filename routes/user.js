@@ -79,11 +79,7 @@ exports.userRoute = function (app, db, bodyParser, public) {
                         req.session.isLoggedIn = true;
                         req.session.username = req.body.username;
                         req.session.userid = userArray[0].id;
-<<<<<<< HEAD
-                        res.sendFile(path.resolve(__dirname + "/../public/user-page.html"));
-=======
                         res.redirect('/index.html');
->>>>>>> ce3c07e13ed0d6f58d09cff7313c80917f76b1c9
                     }
                     else {
                         res.send({ "status": 403, "response": "unauthorized" })
@@ -103,13 +99,9 @@ exports.userRoute = function (app, db, bodyParser, public) {
         res.redirect('/');
     })
 
-<<<<<<< HEAD
     app.get('/addfriend', (req, res)=>{
 
         if (req.session.isLoggedIn == true){
-=======
-    app.get('/addfriend', (req, res) => {
->>>>>>> ce3c07e13ed0d6f58d09cff7313c80917f76b1c9
         var path = require('path')
         res.sendFile(path.resolve(__dirname + "/../public/addfriend.html"))
         }else{
