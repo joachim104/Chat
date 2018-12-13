@@ -17,7 +17,7 @@ exports.userRoute = function (app, db, bodyParser, public) {
 
         if (username && password) {
             // SELECT * FROM users WHERE username = '?' 
-            db.User.query().select().where({ username }).then(userArray => {
+            db.User.query().select().where({ username: username }).then(userArray => {
                 if (userArray.length > 0) {
                     console.log("username already exist")
                     res.send({ "status": 200, "response": "username already exist" });
