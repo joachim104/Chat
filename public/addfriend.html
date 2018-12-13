@@ -15,6 +15,7 @@
 <p></p>
 <button id="addUserAsFriend">Add as friend</button>
     </form>
+<text id="nowFriends"></text>
 </body>
 
 <script>
@@ -33,6 +34,8 @@ $('#addUserAsFriend').on('click', function(a){
     selectedFriend = $("#userList option:selected").text();
     socket.emit('addAsFriend', selectedFriend);
     $("#userList option:selected").remove();
+
+    alert("You are now friends with " + selectedFriend + "!" );
     }
 })
 
