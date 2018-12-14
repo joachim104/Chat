@@ -14,7 +14,18 @@
 </head>
 
 <body>
-    <div id="header"></div>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="index.html">KEA CHATTEN</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="index.html">Home</a></li>
+                <li class="active"><a href="login.html">Login</a></li>
+                <li><a href="signup.html">Sign up</a></li>
+            </ul>
+        </div>
+    </nav>
 
     <h1 class="login-text">Login</h1>
     <form action="/login" method="POST">
@@ -28,8 +39,6 @@
             <button style="color:white" type="submit">Login</button>
         </div>
     </form>
-
-    <div id="footer"></div>
 
 </body>
 

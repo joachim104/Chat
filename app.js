@@ -41,12 +41,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // -----------------------------------------------------------------------------------
 io.on('connection', function (socket) {
 
-
-    console.log("DETTER ER CHATROOM SOCKET DER KØRE BLA BLA BLA");
-
-    console.log(socket.handshake.session.username);
-    
-
     const activeChatroomsArray = [];
 
     db.User.query().select('room_name_id').from('rooms').then(roomArray => {
@@ -60,7 +54,7 @@ io.on('connection', function (socket) {
         });
         socket.emit('users-chatroom-list', activeChatroomsArray);
     });
-    
+
     // io.to(stringRoom).emit('room message', { "navn": "lars" });
 
     socket.on('send-message', function (data) {
@@ -92,46 +86,41 @@ io.on('connection', function (socket) {
     allRoomNamesFromDB = [];
     roomNamesFoundWithMembership = [];
     roomIDsFoundWithMembership = [];
+
     socket.on('addAllUsers', function () {
 
         db.User.query().select('id', 'username').from('users').then(userArray => {
             //console.log(userArray[0].username);
-
             socket.emit('hereIsTheUserList', userArray);
         })
 
-    socket.on('addUser', function(data){
-    db.User.query().select().from('users').where({username: data}).then(userArray =>{
-        //console.log(userArray); <------- printer alt info om den bruger den har fundet, som du har selected, ud
-    addedUsers.push(userArray[0].username);
-    })
-    
-    })
-
+        socket.on('addUser', function (data) {
+            db.User.query().select().from('users').where({ username: data }).then(userArray => {
+                //console.log(userArray); <------- printer alt info om den bruger den har fundet, som du har selected, ud
+                addedUsers.push(userArray[0].username);
+            })
+        })
     })
 
-    socket.on('user-page-loaded', function(){
-    currentUser = socket.handshake.session.username;
-    db.Room.query().select('name', 'room_name_id').from('rooms').then(allRoomNames =>{
-    allRoomNamesFromDB = allRoomNames;
+    socket.on('user-page-loaded', function () {
+        currentUser = socket.handshake.session.username;
+        db.Room.query().select('name', 'room_name_id').from('rooms').then(allRoomNames => {
+            allRoomNamesFromDB = allRoomNames;
 
-       for(i = 0; i<allRoomNamesFromDB.length; i++){
+            for (i = 0; i < allRoomNamesFromDB.length; i++) {
 
-        if(allRoomNamesFromDB[i].room_name_id.includes(currentUser)){
+                if (allRoomNamesFromDB[i].room_name_id.includes(currentUser)) {
 
-            console.log("match fundet: ", allRoomNamesFromDB[i].room_name_id, " ", currentUser)
-            roomNamesFoundWithMembership.push(allRoomNamesFromDB[i].name);
-            roomIDsFoundWithMembership.push(allRoomNamesFromDB[i].room_name_id);
-        }
-       }
-
-       socket.emit('rooms-found-with-membership', roomNamesFoundWithMembership, roomIDsFoundWithMembership);
-
+                    console.log("match fundet: ", allRoomNamesFromDB[i].room_name_id, " ", currentUser)
+                    roomNamesFoundWithMembership.push(allRoomNamesFromDB[i].name);
+                    roomIDsFoundWithMembership.push(allRoomNamesFromDB[i].room_name_id);
+                }
+            }
+            socket.emit('rooms-found-with-membership', roomNamesFoundWithMembership, roomIDsFoundWithMembership);
+        })
     })
 
-    })
-
-    socket.on('createRoom', function(roomName){
+    socket.on('createRoom', function (roomName) {
         console.log("roomname is: ", roomName, "added users is: ", addedUsers)
         addedUsers.push(socket.handshake.session.username)
 
@@ -141,11 +130,11 @@ io.on('connection', function (socket) {
             if (userArray.length > 0) {
                 console.log("here is userarray: ", userArray);
                 console.log("room name already exists")
-            socket.emit("roomExists");
-                
+                socket.emit("roomExists");
+
             } else {
 
-                if(addedUsers.indexOf(socket.handshake.session.username) > -1) {
+                if (addedUsers.indexOf(socket.handshake.session.username) > -1) {
                     addedUsers.splice(socket.handshake.session.username, 1)
                 }
 
@@ -153,12 +142,12 @@ io.on('connection', function (socket) {
                     roomNameString = roomNameString + element + "-"
                 });
 
-                db.Room.query().insert({ name: roomName, room_name_id: roomNameString}).then()
+                db.Room.query().insert({ name: roomName, room_name_id: roomNameString }).then()
                 socket.emit("roomCreatedSucess");
-                 
+
             }
+        })
     })
-})
 
     socket.on('addAsFriend', function (data) {
         // console.log("here is user you clicked", data);
@@ -169,12 +158,12 @@ io.on('connection', function (socket) {
             let userId = parseInt(socket.handshake.session.userid, 10)
 
             console.log("DET HER ER ID USER :: ", socket.handshake.session.userid);
-            
+
             console.log(userId);
-            
+
             if (!isNaN(userId)) {
                 console.log(userId);
-                db.FriendList.query().insert({ user_id: userId, friend_id: userArray[0].id}).then(console.log(""))
+                db.FriendList.query().insert({ user_id: userId, friend_id: userArray[0].id }).then(console.log(""))
             }
 
         })

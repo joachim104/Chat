@@ -38,38 +38,9 @@ exports.userRoute = function (app, db, bodyParser, public) {
         }
     });
 
-    // __dirname er mappen som user.js ligger i
     app.get('/login', (req, res) => {
         var path = require('path')
         res.sendFile(path.resolve(__dirname + '/../public/login.html'));
-    })
-
-    app.get('/user-page', (req, res) => {
-        if(req.session.isLoggedIn == true){
-
-            var path = require('path')
-            res.sendFile(path.resolve(__dirname + '/../public/user-page.html'));
-        }else{
-            var path = require('path')
-            res.sendFile(path.resolve(__dirname + '/../public/login.html'));
-        }
-    })
-
-    // express dynamic url param
-    app.get('/chatroom/:roomName', (req, res) => {
-        const roomName = "admin-user-";
-
-        if (req.session.isLoggedIn == true && roomName.indexOf(req.session.username)) {
-            // når vi har roomname så hent alle beskeder i db der matcher det roomname 
-            // og sender beskederne videre med
-            console.log(req.params.roomName);
-            var path = require('path')
-            res.sendFile(path.resolve(__dirname + '/../public/chatroom.html'));
-        }
-        else {
-            var path = require('path')
-            res.sendFile(path.resolve(__dirname + '/../public/login.html'));
-        }
     })
 
     app.post('/login', (req, res) => {
@@ -84,7 +55,7 @@ exports.userRoute = function (app, db, bodyParser, public) {
                         req.session.isLoggedIn = true;
                         req.session.username = req.body.username;
                         req.session.userid = userArray[0].id;
-                        res.sendFile(path.resolve(__dirname + '/../public/index.html'));
+                        res.sendFile(path.resolve(__dirname + '/../public/user-page.html'));
                     }
                 })
             }
@@ -96,20 +67,51 @@ exports.userRoute = function (app, db, bodyParser, public) {
         })
     });
 
-    app.get('/logout', (req, res) => {
-        req.session.destroy();
-        res.redirect('/');
-    })
-
-    app.get('/addfriend', (req, res)=>{
-
-        if (req.session.isLoggedIn == true){
-        var path = require('path')
-        res.sendFile(path.resolve(__dirname + "/../public/addfriend.html"))
-        }else{
+    app.get('/user-page', (req, res) => {
+        if (req.session.isLoggedIn == true) {
+            var path = require('path')
+            res.sendFile(path.resolve(__dirname + '/../public/user-page.html'));
+        } else {
             var path = require('path')
             res.sendFile(path.resolve(__dirname + '/../public/login.html'));
-            }
+        }
+    })
+
+    // express dynamic url param
+    app.get('/chatroom', (req, res) => {
+
+        const roomName = "admin-user-";
+        console.log("DEN RAMMER INDE I CHATROOM!");
+
+        // && roomName.indexOf(req.session.username)
+
+        if (req.session.isLoggedIn == true) {
+            // når vi har roomname så hent alle beskeder i db der matcher det roomname 
+            // og sender beskederne videre med
+            console.log(req.params.roomName);
+            var path = require('path')
+            res.sendFile(path.resolve(__dirname + '/../public/chatroom.html'));
+        }
+        else {
+            var path = require('path')
+            res.sendFile(path.resolve(__dirname + '/../public/login.html'));
+        }
+    })
+
+    app.get('/logout', (req, res) => {
+        req.session.destroy();
+        res.redirect('/index.html');
+    })
+
+    app.get('/addfriend', (req, res) => {
+
+        if (req.session.isLoggedIn == true) {
+            var path = require('path')
+            res.sendFile(path.resolve(__dirname + "/../public/addfriend.html"))
+        } else {
+            var path = require('path')
+            res.sendFile(path.resolve(__dirname + '/../public/login.html'));
+        }
 
     })
 }
