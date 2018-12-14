@@ -70,13 +70,7 @@
       let counter = 0;
       $.each(roomNames ,function (k, v) {
         $("#table-body").append("<tr id=" + counter + "> <td>" + v + " </td> </tr>");
-        // denne linje kan tilføjes hvis vi vil se medlemmer af gruppen
-        // $("#" + counter).append("<td>" + roomIDs[counter] + " </td>");
-        // $("#" + counter).append('<td> <button type="button" class="btn btn-primary">Join Chat</button>  </td>');
-
         $("#" + counter).append('<td> <a href="chatroom/'+ roomIDs[counter] +'.html">Visit W3Schools.com!</a>  </td>');
-
-
         counter = counter + 1;
       });
     });
