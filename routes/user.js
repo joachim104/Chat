@@ -81,6 +81,13 @@ exports.userRoute = function (app, db, bodyParser, public) {
         //console.log("DEN RAMMER INDE I CHATROOM!");
         global.roomidparam = dynamicRoomName;
 
+        db.Message.query().select().where({room_id: dynamicRoomName}).then(allMessages =>{
+
+        allMessages.forEach(function(element) {
+                console.log(element.message)
+            }, this);
+
+        })
 
         // && roomName.indexOf(req.session.username)
 

@@ -57,7 +57,7 @@ io.on('connection', function (socket) {
 
     socket.on('send-message', function (data) {
         theroomidparam = roomidparam;
-        console.log();
+        console.log(roomidparam);
 
         
         // emits to all but the socket itself // denne her skal vi bruge i et rum med flere brugere
@@ -68,8 +68,9 @@ io.on('connection', function (socket) {
 
         //console.log(socket.handshake.session.username, "har skrevet: ", message);
         // OBS. her skal userinfo og room id gøres dynamisk istedet!!
-        db.Message.query().insert({ message: message, user_id: userInfo, room_id: 1 }).then(console.log("")
+        db.Message.query().insert({ message: message, user_id: userInfo, room_id: roomidparam }).then(console.log("")
         );
+
         // emits to all the sockets
         // io.emit("here's the message", data);
         // emits only to the specific socket // denne her skal bruges i privat chat med 2 brugere
@@ -137,16 +138,16 @@ io.on('connection', function (socket) {
             } else {
 
                 if (addedUsers.indexOf(socket.handshake.session.username) > -1) {
-                    addedUsers.splice(socket.handshake.session.username, 1)
-                }
+                    addedUsers.pop()
+                 }
 
                 addedUsers.forEach(element => {
                     roomNameString = roomNameString + element + "-"
+                   // console.log(element)
                 });
 
                 db.Room.query().insert({ name: roomName, room_name_id: roomNameString }).then()
                 socket.emit("roomCreatedSucess");
-
             }
         })
     })

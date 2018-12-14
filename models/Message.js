@@ -15,7 +15,7 @@ class Message extends Model {
                 id: {type: 'integer'},
                 message: {type: 'string'},
                 user_id: {type: 'integer'},
-                room_id: {type: 'integer'}
+                room_id: {type: 'string'}
             }
         }
     }
