@@ -54,7 +54,7 @@ io.on('connection', function (socket) {
         });
         socket.emit('users-chatroom-list', activeChatroomsArray);
     });
-    
+
     // socket.on('send-message-to-room', function (data) {
     //     io.to(stringRoom).emit('send-message-to-room', { "navn": "lars" });
     // });
@@ -65,9 +65,9 @@ io.on('connection', function (socket) {
 
         console.log("DEN RAMMER IND I SEND MESSAGE");
         // console.log("STRINGROOM:  ", stringRoom);
-        io.to('user1-user2-user-admin-').emit("here's the message", data );
+        io.to('user1-user2-user-admin-').emit("here's the message", data);
 
-        
+
         // let message = data.message;
         // var userInfo = socket.handshake.session.userid;
 
@@ -128,12 +128,15 @@ io.on('connection', function (socket) {
 
     socket.on('user-page-loaded', function () {
         let currentUser = socket.handshake.session.username;
-        let currentUserId =socket.handshake.session.userid;
+        let currentUserId = socket.handshake.session.userid;
+        
 
 
-        db.FriendList.query().select().where({user_id: currentUserId}).then(allFriends => {
+        db.FriendList.query().select().where({ user_id: currentUserId }).then(allFriends => {
             const friendList = allFriends;
-            
+            // console.log(friendList);      
+
+            socket.emit("current-users-friendlist", friendList);
         });
 
         db.Room.query().select('name', 'room_name_id').from('rooms').then(allRoomNames => {
