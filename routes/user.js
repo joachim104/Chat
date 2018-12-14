@@ -1,10 +1,8 @@
 exports.userRoute = function (app, db, bodyParser, public) {
-
-
     const bcrypt = require('bcrypt');
     const saltRounds = 10;
-
     const userArray = [];
+    var roomidparam;
 
     app.get("/signup", (req, res) => {
         var path = require('path');
@@ -77,11 +75,19 @@ exports.userRoute = function (app, db, bodyParser, public) {
     })
 
     // express dynamic url param
-    app.get('/chatroom/:dynamicRoomName', (req, res) => {
-
-        const dynamicRoomName = req.params.dynamicRoomName;
+    app.get('/chatroom/:id', (req, res) => {
+        const dynamicRoomName = req.params.id;
         console.log("dynamisk room navn", dynamicRoomName);
         //console.log("DEN RAMMER INDE I CHATROOM!");
+        global.roomidparam = dynamicRoomName;
+
+        db.Message.query().select().where({room_id: dynamicRoomName}).then(allMessages =>{
+
+        allMessages.forEach(function(element) {
+                console.log(element.message)
+            }, this);
+
+        })
 
         // && roomName.indexOf(req.session.username)
 
@@ -97,7 +103,7 @@ exports.userRoute = function (app, db, bodyParser, public) {
             res.sendFile(path.resolve(__dirname + '/../public/login.html'));
         }
     })
-
+    
     app.get('/logout', (req, res) => {
         req.session.destroy();
         res.redirect('/index.html');

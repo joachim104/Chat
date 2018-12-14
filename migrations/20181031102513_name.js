@@ -21,9 +21,8 @@ exports.up = function(knex, Promise) {
             table.increments('id').primary();
             table.string('message');
             table.integer('user_id').unsigned().notNullable();
-            table.integer('room_id').unsigned().notNullable();
+            table.string('room_id')
             table.foreign('user_id').references('users.id');
-            table.foreign('room_id').references('rooms.id');
         })
 };
 
