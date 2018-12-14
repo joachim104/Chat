@@ -2,14 +2,12 @@
 // når vi siger require henter vi i dette eksempel express 
 var express = require("express");
 var app = express();
-
 const Knex = require("knex"); // her henter vi knex. 
 const Model = require("objection").Model;
 const knexConfig = require('./knexfile').development;
 const session = require('express-session');
 // body-parser giver adgang til req.body
 const bodyParser = require("body-parser");
-const url = require('url');
 
 // server opsætning
 const server = require('http').createServer(app);
@@ -58,25 +56,24 @@ io.on('connection', function (socket) {
     // io.to(stringRoom).emit('room message', { "navn": "lars" });
 
     socket.on('send-message', function (data) {
+        theroomidparam = roomidparam;
+        console.log();
+
+        
         // emits to all but the socket itself // denne her skal vi bruge i et rum med flere brugere
-        socket.broadcast.emit("here's the message", data);
+
 
         let message = data.message;
         var userInfo = socket.handshake.session.userid;
 
         //console.log(socket.handshake.session.username, "har skrevet: ", message);
-
-
         // OBS. her skal userinfo og room id gøres dynamisk istedet!!
         db.Message.query().insert({ message: message, user_id: userInfo, room_id: 1 }).then(console.log("")
         );
         // emits to all the sockets
         // io.emit("here's the message", data);
-
-
         // emits only to the specific socket // denne her skal bruges i privat chat med 2 brugere
         // socket.emit("here's the message", data);
-
     })
 })
 
