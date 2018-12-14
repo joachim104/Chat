@@ -31,13 +31,12 @@
   <table class="table table-bordered">
     <thead>
       <tr>
-        <th style="width:50%">Username</th>
-        <th style="width:50%">Status</th>
+        <th style="width:50%">Your Friends</th>
+        <th style="width:50%">Active Users</th>
       </tr>
-      <tr>
-        <td id="username">Navn</td>
-        <td id="status">Online!</td>
-      </tr>
+    </thead>
+    <tbody id="table-body-friends">
+    </tbody>
   </table>
 
   <div class="progress">
@@ -62,14 +61,29 @@
     var socket = io();
     socket.emit("user-page-loaded");
 
+
+    socket.on("current-users-friendlist", function (friendListArray) {
+
+      console.log("vennerliste array: ", friendListArray);
+
+      const friendList = friendListArray;
+
+      $.each(friendList, function (k, v) {
+        console.log("K:  ", k)
+        console.log("V:  ", v.friend_id);
+        $("#table-body-friends").append("<tr> <td>" + v.friend_id + "</td> <tr>");
+      })
+    });
+
+
     socket.on('rooms-found-with-membership', function (roomNames, roomIDs) {
 
       console.log(roomIDs);
-      
+
       const roomMembers = [];
       let counter = 0;
-      $.each(roomNames ,function (k, v) {
-        $("#table-body").append("<tr id=" + counter + "> <td style='width: 50%'> <a href='chatroom/"+ roomIDs[counter] +"' class='btn btn-default'> " + v + " </td> </tr>");
+      $.each(roomNames, function (k, v) {
+        $("#table-body").append("<tr id=" + counter + "> <td style='width: 50%'> <a href='chatroom/" + roomIDs[counter] + "' class='btn btn-default'> " + v + " </td> </tr>");
         console.log(counter)
         console.log(roomIDs[counter]);
 
@@ -77,7 +91,7 @@
         // $("#" + counter).append("<td>" + roomIDs[counter] + " </td>");
         // $("#" + counter).append('<td> <button type="button" class="btn btn-primary">Join Chat</button>  </td>');
 
-        $("#" + counter).append('<td>'+roomIDs[counter]+'</td>'); 
+        $("#" + counter).append('<td>' + roomIDs[counter] + '</td>');
 
 
         counter = counter + 1;

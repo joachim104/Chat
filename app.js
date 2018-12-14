@@ -46,14 +46,16 @@ io.on('connection', function (socket) {
         roomArray.forEach(roomName => {
             let stringRoom = JSON.stringify(roomName);
             if (stringRoom.includes(socket.handshake.session.username + "-")) {
-                socket.join(stringRoom);
+                socket.join('user1-user2-user-admin-');
                 activeChatroomsArray.push(stringRoom);
             }
         });
         socket.emit('users-chatroom-list', activeChatroomsArray);
     });
 
-    // io.to(stringRoom).emit('room message', { "navn": "lars" });
+    // socket.on('send-message-to-room', function (data) {
+    //     io.to(stringRoom).emit('send-message-to-room', { "navn": "lars" });
+    // });
 
     socket.on('send-message', function (data) {
         theroomidparam = roomidparam;
@@ -63,8 +65,9 @@ io.on('connection', function (socket) {
         // emits to all but the socket itself // denne her skal vi bruge i et rum med flere brugere
 
 
-        let message = data.message;
-        var userInfo = socket.handshake.session.userid;
+        console.log("DEN RAMMER IND I SEND MESSAGE");
+        // console.log("STRINGROOM:  ", stringRoom);
+        io.to('user1-user2-user-admin-').emit("here's the message", data);
 
         //console.log(socket.handshake.session.username, "har skrevet: ", message);
         // OBS. her skal userinfo og room id gøres dynamisk istedet!!
@@ -77,6 +80,26 @@ io.on('connection', function (socket) {
         // socket.emit("here's the message", data);
     })
 })
+
+//     socket.on('send-message', function (data) {
+//         // emits to all but the socket itself // denne her skal vi bruge i et rum med flere brugere
+//         socket.broadcast.emit("here's the message", data);
+
+//         let message = data.message;
+//         var userInfo = socket.handshake.session.userid;
+
+//         // OBS. her skal userinfo og room id gøres dynamisk istedet!!
+//         db.Message.query().insert({ message: message, user_id: userInfo, room_id: 1 }).then(console.log("")
+//         );
+//         // emits to all the sockets
+//         // io.emit("here's the message", data);
+
+
+//         // emits only to the specific socket // denne her skal bruges i privat chat med 2 brugere
+//         // socket.emit("here's the message", data);
+
+//     })
+// })
 
 io.on('connection', function (socket) {
     addedUsers = [];
@@ -102,12 +125,15 @@ io.on('connection', function (socket) {
 
     socket.on('user-page-loaded', function () {
         let currentUser = socket.handshake.session.username;
-        let currentUserId =socket.handshake.session.userid;
+        let currentUserId = socket.handshake.session.userid;
+        
 
 
-        db.FriendList.query().select().where({user_id: currentUserId}).then(allFriends => {
+        db.FriendList.query().select().where({ user_id: currentUserId }).then(allFriends => {
             const friendList = allFriends;
-            
+            // console.log(friendList);      
+
+            socket.emit("current-users-friendlist", friendList);
         });
 
         db.Room.query().select('name', 'room_name_id').from('rooms').then(allRoomNames => {
