@@ -18,7 +18,7 @@ const sharedsession = require("socket.io-express-session");
 // use the driver and connect locally to my mysql
 const knex = require('knex')(knexConfig);
 
-const public = app.use(express.static('public'));
+const public = app.use(express.static(__dirname + '/public'));
 
 var appSession = session({
     secret: 'keyboard cat',
@@ -100,7 +100,15 @@ io.on('connection', function (socket) {
     })
 
     socket.on('user-page-loaded', function () {
-        currentUser = socket.handshake.session.username;
+        let currentUser = socket.handshake.session.username;
+        let currentUserId =socket.handshake.session.userid;
+
+
+        db.FriendList.query().select().where({user_id: currentUserId}).then(allFriends => {
+            const friendList = allFriends;
+            
+        });
+
         db.Room.query().select('name', 'room_name_id').from('rooms').then(allRoomNames => {
             allRoomNamesFromDB = allRoomNames;
 
@@ -108,7 +116,7 @@ io.on('connection', function (socket) {
 
                 if (allRoomNamesFromDB[i].room_name_id.includes(currentUser)) {
 
-                    //console.log("match fundet: ", allRoomNamesFromDB[i].room_name_id, " ", currentUser)
+                    // console.log("match fundet: ", allRoomNamesFromDB[i].room_name_id, " ", currentUser)
                     roomNamesFoundWithMembership.push(allRoomNamesFromDB[i].name);
                     roomIDsFoundWithMembership.push(allRoomNamesFromDB[i].room_name_id);
                 }
