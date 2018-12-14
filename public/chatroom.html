@@ -16,7 +16,7 @@
 
 <body>
 
-        <div id="header"></div>
+        <!-- <div id="header"></div> -->
 
     <div class="chatbox">
         <div class="chatlogs">
@@ -31,18 +31,22 @@
 
     <script>
         const socket = io.connect('http://localhost:3000/')
+
         
-        socket.on("room message", function(data) {
-            console.log(data);
-        });
+        // socket.on("room message", function(data) {
+        //     console.log(data);
+        // });
 
         $('#btn').on('click', event => {
             const message = $('#message-input').val();
             socket.emit('send-message', { message });
             $('.chat').append('<p class="chat-message chat-message-self">' + message + '</p>'); 
             $('#message-input').val("");
+            console.log(message);
         })
-        socket.on("here's the message", function(data) {          
+
+        socket.on("here's the message", function(data) {
+            console.log(data);              
                     $('.chat').append('<p class="chat-message">' + data.message + '</p>');
                     console.log("Bruger modtager besked");
                     // console.log("data printet on client:", data);
