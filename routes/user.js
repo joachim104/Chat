@@ -105,6 +105,7 @@ exports.userRoute = function (app, db, bodyParser, public) {
     })
     
     app.get('/logout', (req, res) => {
+        console.log("her er jeg")
         req.session.destroy();
         res.redirect('/index.html');
     })
