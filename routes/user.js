@@ -60,7 +60,6 @@ exports.userRoute = function (app, db, bodyParser, public) {
                 })
             }
             else {
-                console.log("login failed 2")
                 var path = require('path')
                 res.sendFile(path.resolve(__dirname + '/../public/login.html'));
             }
@@ -82,16 +81,14 @@ exports.userRoute = function (app, db, bodyParser, public) {
 
         const dynamicRoomName = req.params.id;
         console.log("dynamisk room navn", dynamicRoomName);
-
-        const roomName = "admin-user-";
-        console.log("DEN RAMMER INDE I CHATROOM!");
+        //console.log("DEN RAMMER INDE I CHATROOM!");
 
         // && roomName.indexOf(req.session.username)
 
         if (req.session.isLoggedIn == true) {
             // når vi har roomname så hent alle beskeder i db der matcher det roomname 
             // og sender beskederne videre med
-            console.log(req.params.roomName);
+            //console.log(req.params.roomName);
             var path = require('path')
             res.sendFile(path.resolve(__dirname + '/../public/chatroom.html'));
         }

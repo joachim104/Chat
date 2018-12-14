@@ -9,6 +9,7 @@ const knexConfig = require('./knexfile').development;
 const session = require('express-session');
 // body-parser giver adgang til req.body
 const bodyParser = require("body-parser");
+const url = require('url');
 
 // server opsætning
 const server = require('http').createServer(app);
@@ -49,7 +50,6 @@ io.on('connection', function (socket) {
             if (stringRoom.includes(socket.handshake.session.username + "-")) {
                 socket.join(stringRoom);
                 activeChatroomsArray.push(stringRoom);
-                console.log("det her er room: ", stringRoom)
             }
         });
         socket.emit('users-chatroom-list', activeChatroomsArray);
@@ -64,11 +64,11 @@ io.on('connection', function (socket) {
         let message = data.message;
         var userInfo = socket.handshake.session.userid;
 
-        console.log(socket.handshake.session.username, "har skrevet: ", message);
+        //console.log(socket.handshake.session.username, "har skrevet: ", message);
 
 
         // OBS. her skal userinfo og room id gøres dynamisk istedet!!
-        db.Message.query().insert({ message: message, user_id: userInfo, room_id: 18 }).then(console.log("")
+        db.Message.query().insert({ message: message, user_id: userInfo, room_id: 1 }).then(console.log("")
         );
         // emits to all the sockets
         // io.emit("here's the message", data);
@@ -111,7 +111,7 @@ io.on('connection', function (socket) {
 
                 if (allRoomNamesFromDB[i].room_name_id.includes(currentUser)) {
 
-                    console.log("match fundet: ", allRoomNamesFromDB[i].room_name_id, " ", currentUser)
+                    //console.log("match fundet: ", allRoomNamesFromDB[i].room_name_id, " ", currentUser)
                     roomNamesFoundWithMembership.push(allRoomNamesFromDB[i].name);
                     roomIDsFoundWithMembership.push(allRoomNamesFromDB[i].room_name_id);
                 }
@@ -121,15 +121,12 @@ io.on('connection', function (socket) {
     })
 
     socket.on('createRoom', function (roomName) {
-        console.log("roomname is: ", roomName, "added users is: ", addedUsers)
         addedUsers.push(socket.handshake.session.username)
 
         let roomNameString = ""
 
         db.Room.query().select().where({ name: roomName }).then(userArray => {
             if (userArray.length > 0) {
-                console.log("here is userarray: ", userArray);
-                console.log("room name already exists")
                 socket.emit("roomExists");
 
             } else {
@@ -153,16 +150,9 @@ io.on('connection', function (socket) {
         // console.log("here is user you clicked", data);
         db.User.query().select().from('users').where({ username: data }).then(userArray => {
 
-            console.log("user u clicked on: ", userArray);
-
             let userId = parseInt(socket.handshake.session.userid, 10)
 
-            console.log("DET HER ER ID USER :: ", socket.handshake.session.userid);
-
-            console.log(userId);
-
             if (!isNaN(userId)) {
-                console.log(userId);
                 db.FriendList.query().insert({ user_id: userId, friend_id: userArray[0].id }).then(console.log(""))
             }
 
