@@ -20,7 +20,7 @@ const sharedsession = require("socket.io-express-session");
 // use the driver and connect locally to my mysql
 const knex = require('knex')(knexConfig);
 
-const public = app.use(express.static('public'));
+const public = app.use(express.static(__dirname + '/public'));
 
 var appSession = session({
     secret: 'keyboard cat',
