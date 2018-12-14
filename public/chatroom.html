@@ -42,11 +42,11 @@
             socket.emit('send-message', { message });
             $('.chat').append('<p class="chat-message chat-message-self">' + message + '</p>'); 
             $('#message-input').val("");
-            console.log(message);
+            // console.log(message);
         })
 
         socket.on("here's the message", function(data) {
-            console.log(data);              
+            console.log("hej", data);              
                     $('.chat').append('<p class="chat-message">' + data.message + '</p>');
                     console.log("Bruger modtager besked");
                     // console.log("data printet on client:", data);
