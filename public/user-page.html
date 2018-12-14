@@ -51,7 +51,7 @@
     <thead>
       <tr>
         <th>Room</th>
-        <th>Action</th>
+        <th>Members</th>
       </tr>
     </thead>
     <tbody id="table-body">
@@ -69,8 +69,17 @@
       const roomMembers = [];
       let counter = 0;
       $.each(roomNames ,function (k, v) {
-        $("#table-body").append("<tr id=" + counter + "> <td>" + v + " </td> </tr>");
-        $("#" + counter).append('<td> <a href="chatroom/'+ roomIDs[counter] +'.html">Visit W3Schools.com!</a>  </td>');
+        $("#table-body").append("<tr id=" + counter + "> <td style='width: 50%'> <a href='chatroom/"+ roomIDs[counter] +"' class='btn btn-default'> " + v + " </td> </tr>");
+        console.log(counter)
+        console.log(roomIDs[counter]);
+
+        // denne linje kan tilføjes hvis vi vil se medlemmer af gruppen
+        // $("#" + counter).append("<td>" + roomIDs[counter] + " </td>");
+        // $("#" + counter).append('<td> <button type="button" class="btn btn-primary">Join Chat</button>  </td>');
+
+        $("#" + counter).append('<td>'+roomIDs[counter]+'</td>'); 
+
+
         counter = counter + 1;
       });
     });

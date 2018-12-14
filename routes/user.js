@@ -78,7 +78,10 @@ exports.userRoute = function (app, db, bodyParser, public) {
     })
 
     // express dynamic url param
-    app.get('/chatroom/admin-user', (req, res) => {
+    app.get('/chatroom/:id', (req, res) => {
+
+        const dynamicRoomName = req.params.id;
+        console.log("dynamisk room navn", dynamicRoomName);
 
         const roomName = "admin-user-";
         console.log("DEN RAMMER INDE I CHATROOM!");
