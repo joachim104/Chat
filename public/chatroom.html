@@ -33,43 +33,55 @@
     <script>
         const socket = io.connect('http://localhost:3000/')
 
-
         $(document).ready(function () {
-                $("#btn").hide();
-            });
+            $("#btn").hide();
+        });
 
+        $('#btn2').on('click', event => {
 
-            $('#btn2').on('click', event => {
+            var fullURL = window.location.href;
+            var n = fullURL.lastIndexOf('/');
+            var urlParams = fullURL.substring(n + 1);
+            socket.emit("here is the url", urlParams);
+            console.log(urlParams)
+            $("#btn2").hide();
+            $("#btn").show();
 
-                var fullURL = window.location.href;
-                var n = fullURL.lastIndexOf('/');
-                var urlParams = fullURL.substring(n + 1);
-                socket.emit("here is the url", urlParams);
-                console.log(urlParams)
-                $("#btn2").hide();
-                $("#btn").show();
+            socket.on("here is the db messages", function (data, userid) {
+                console.log(data);
+                console.log(userid);
+
+                data.forEach(element => {
+                    console.log(element.user_id);
+                    if( userid == element.user_id){
+                        $('.chat').append('<p class="chat-message chat-message-self">' + element.message + '</p>');
+                    }
+                    else {
+                        $('.chat').append('<p class="chat-message chat-message">' + element.message + '</p>');
+                    }
+                });
             })
-
-            $('#btn').on('click', event => {
-                const message = $('#message-input').val();
-                socket.emit('send-message', { message });
-                $('.chat').append('<p class="chat-message chat-message-self">' + message + '</p>');
-                $('#message-input').val("");
-            })
-
-            socket.on("here's the message", function (data) {
-                console.log("hej", data);
-                $('.chat').append('<p class="chat-message">' + data.message + '</p>');
-                console.log("Bruger modtager besked");
-                // console.log("data printet on client:", data);
-            })
+        })
 
 
-            $(function () {
-                $("#header").load("/components/header.html");
-                $("#footer").load("/components/footer.html");
-            });
+        $('#btn').on('click', event => {
+            const message = $('#message-input').val();
+            socket.emit('send-message', { message });
+            $('.chat').append('<p class="chat-message chat-message-self">' + message + '</p>');
+            $('#message-input').val("");
+        })
 
+        socket.on("here's the message", function (data) {
+            console.log("hej", data);
+            $('.chat').append('<p class="chat-message">' + data.message + '</p>');
+            console.log("Bruger modtager besked");
+            // console.log("data printet on client:", data);
+        })
+
+        $(function () {
+            $("#header").load("/components/header.html");
+            $("#footer").load("/components/footer.html");
+        });
     </script>
 
 </body>

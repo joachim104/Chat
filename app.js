@@ -73,20 +73,20 @@ io.on('connection', function (socket) {
             const friendList = allFriends;
             counter = 0;
 
-            friendList.forEach(function(element) {
+            friendList.forEach(function (element) {
                 console.log("venliste: ", friendList[counter].friend_id);
-                db.User.query().select('username').from('users').where({id: friendList[counter].friend_id}).then(usernamesOfAllFriends =>{
+                db.User.query().select('username').from('users').where({ id: friendList[counter].friend_id }).then(usernamesOfAllFriends => {
                     usernamesOfFriends = usernamesOfAllFriends;
                     console.log(usernamesOfFriends);
                     socket.emit("current-users-friendlist", usernamesOfFriends);
                 })
-                
-                counter = counter +1;
+
+                counter = counter + 1;
             }, this);
             // console.log(friendList);   
 
 
-           // socket.emit("current-users-friendlist", usernamesOfFriends);
+            // socket.emit("current-users-friendlist", usernamesOfFriends);
         });
         db.Room.query().select('name', 'room_name_id').from('rooms').then(allRoomNames => {
             allRoomNamesFromDB = allRoomNames;
@@ -98,13 +98,9 @@ io.on('connection', function (socket) {
             }
             socket.emit('rooms-found-with-membership', roomNamesFoundWithMembership, roomIDsFoundWithMembership);
         })
-<<<<<<< HEAD
 
-        
+
     })
-=======
-    });
->>>>>>> 4b8c9b2bb72dcea6002963f81d67fb71037e5c22
 
     socket.on('createRoom', function (roomName) {
         addedUsers.push(socket.handshake.session.username)
@@ -135,12 +131,32 @@ io.on('connection', function (socket) {
     })
 
     let urlParam = "";
+    const messageArray = [];
+
 
     socket.on("here is the url", function (data) {
-        urlParam = data; 
+        urlParam = data;
         console.log(urlParam);
         socket.join(urlParam);
-    })
+
+        db.Message.query().select().where({ room_id: urlParam }).then(allMessages => {
+            allMessages.forEach(function (element) {
+                // console.log("printer element", element.message)
+                messageArray.push(element);
+            }, this);
+            // console.log("MESSAGE ARRAY", messageArray)
+            socket.emit("here is the db messages", messageArray, socket.handshake.session.userid);
+        })
+    });
+
+
+    // socket.on("here is messages from db", function (data) {
+    //     db.Message.query().select().where({room_id: dynamicRoomName}).then(allMessages =>{
+    //         allMessages.forEach(function(element) {           
+    //             }, this);
+    //             console.log(allMessages);
+    //         })
+    // })
 
     socket.on('send-message', function (data) {
 
