@@ -129,11 +129,24 @@ io.on('connection', function (socket) {
         
 
 
-        db.FriendList.query().select().where({ user_id: currentUserId }).then(allFriends => {
+        db.FriendList.query().select('friend_id').from('friend_list').where({ user_id: currentUserId }).then(allFriends => {
             const friendList = allFriends;
-            // console.log(friendList);      
+            counter = 0;
 
-            socket.emit("current-users-friendlist", friendList);
+            friendList.forEach(function(element) {
+                console.log("venliste: ", friendList[counter].friend_id);
+                db.User.query().select('username').from('users').where({id: friendList[counter].friend_id}).then(usernamesOfAllFriends =>{
+                    usernamesOfFriends = usernamesOfAllFriends;
+                    console.log(usernamesOfFriends);
+                    socket.emit("current-users-friendlist", usernamesOfFriends);
+                })
+                
+                counter = counter +1;
+            }, this);
+            // console.log(friendList);   
+
+
+           // socket.emit("current-users-friendlist", usernamesOfFriends);
         });
 
         db.Room.query().select('name', 'room_name_id').from('rooms').then(allRoomNames => {
@@ -150,6 +163,8 @@ io.on('connection', function (socket) {
             }
             socket.emit('rooms-found-with-membership', roomNamesFoundWithMembership, roomIDsFoundWithMembership);
         })
+
+        
     })
 
     socket.on('createRoom', function (roomName) {
