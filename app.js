@@ -40,76 +40,23 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // -----------------------------------------------------------------------------------
 io.on('connection', function (socket) {
 
+    const addedUsers = [];
+    // let roomNameString = "";
+    let allRoomNamesFromDB = [];
+    const roomNamesFoundWithMembership = [];
+    const roomIDsFoundWithMembership = [];
     const activeChatroomsArray = [];
 
-    db.User.query().select('room_name_id').from('rooms').then(roomArray => {
-        roomArray.forEach(roomName => {
-            let stringRoom = JSON.stringify(roomName);
-            if (stringRoom.includes(socket.handshake.session.username + "-")) {
-                // socket.join('user1-user2-user-admin-');
-                activeChatroomsArray.push(stringRoom);
-            }
-        });
-        socket.emit('users-chatroom-list', activeChatroomsArray);
-    });
 
+    // socket.on('join-room', function (data) {
 
-
-
-    socket.on('send-message', function (data) {
-        theroomidparam = roomidparam;
-        console.log(roomidparam);
-
-        socket.join(roomidparam);
-
-        // console.log(data.message);
-        // io.to(roomidparam).emit("here's the message", data);
-
-        socket.broadcast.to(roomidparam).emit("here's the message", data);
-
-        console.log(data.message);
-        // socket.to(roomidparam).emit("here's the message", data);
-        // io.to(theroomidparam).emit("here's the message", data);
-
-
-
-
-
-        // emits to all but the socket itself // denne her skal vi bruge i et rum med flere brugere
-        // socket.broadcast.emit("here's the message", data);
-
-        
-
-        let message = data.message;
-        var userInfo = socket.handshake.session.userid;
-
-        // OBS. her skal userinfo og room id gøres dynamisk istedet!!
-        db.Message.query().insert({ message: message, user_id: userInfo, room_id: roomidparam  }).then(console.log("")
-        );
-        // emits to all the sockets
-        // io.emit("here's the message", data);
-
-
-        // emits only to the specific socket // denne her skal bruges i privat chat med 2 brugere
-        // socket.emit("here's the message", data);
-
-    })
-})
-
-io.on('connection', function (socket) {
-    addedUsers = [];
-    roomNameString = "";
-    allRoomNamesFromDB = [];
-    roomNamesFoundWithMembership = [];
-    roomIDsFoundWithMembership = [];
+    // });
 
     socket.on('addAllUsers', function () {
-
         db.User.query().select('id', 'username').from('users').then(userArray => {
             //console.log(userArray[0].username);
             socket.emit('hereIsTheUserList', userArray);
         })
-
         socket.on('addUser', function (data) {
             db.User.query().select().from('users').where({ username: data }).then(userArray => {
                 //console.log(userArray); <------- printer alt info om den bruger den har fundet, som du har selected, ud
@@ -122,51 +69,35 @@ io.on('connection', function (socket) {
         let currentUser = socket.handshake.session.username;
         let currentUserId = socket.handshake.session.userid;
 
-
-
         db.FriendList.query().select().where({ user_id: currentUserId }).then(allFriends => {
             const friendList = allFriends;
-            // console.log(friendList);      
-
             socket.emit("current-users-friendlist", friendList);
         });
-
         db.Room.query().select('name', 'room_name_id').from('rooms').then(allRoomNames => {
             allRoomNamesFromDB = allRoomNames;
-
             for (i = 0; i < allRoomNamesFromDB.length; i++) {
-
                 if (allRoomNamesFromDB[i].room_name_id.includes(currentUser)) {
-
-                    // console.log("match fundet: ", allRoomNamesFromDB[i].room_name_id, " ", currentUser)
                     roomNamesFoundWithMembership.push(allRoomNamesFromDB[i].name);
                     roomIDsFoundWithMembership.push(allRoomNamesFromDB[i].room_name_id);
                 }
             }
             socket.emit('rooms-found-with-membership', roomNamesFoundWithMembership, roomIDsFoundWithMembership);
         })
-    })
+    });
 
     socket.on('createRoom', function (roomName) {
         addedUsers.push(socket.handshake.session.username)
-
         let roomNameString = ""
-
         db.Room.query().select().where({ name: roomName }).then(userArray => {
             if (userArray.length > 0) {
                 socket.emit("roomExists");
-
             } else {
-
                 if (addedUsers.indexOf(socket.handshake.session.username) > -1) {
                     addedUsers.pop()
                 }
-
                 addedUsers.forEach(element => {
                     roomNameString = roomNameString + element + "-"
-                    // console.log(element)
                 });
-
                 db.Room.query().insert({ name: roomName, room_name_id: roomNameString }).then()
                 socket.emit("roomCreatedSucess");
             }
@@ -174,18 +105,51 @@ io.on('connection', function (socket) {
     })
 
     socket.on('addAsFriend', function (data) {
-        // console.log("here is user you clicked", data);
         db.User.query().select().from('users').where({ username: data }).then(userArray => {
-
             let userId = parseInt(socket.handshake.session.userid, 10)
-
             if (!isNaN(userId)) {
                 db.FriendList.query().insert({ user_id: userId, friend_id: userArray[0].id }).then(console.log(""))
             }
-
         })
     })
+
+    let urlParam = "";
+
+    socket.on("here is the url", function (data) {
+        console.log(data);
+        urlParam = data; 
+        socket.join(data);
+    })
+
+    socket.on('send-message', function (data) {
+        // theroomidparam = roomidparam;
+        // console.log("room ID: ", roomidparam);
+        console.log(data.message);
+
+        // socket.on("here is the url", function (data) {
+        //     const urlParam = data;
+        //     console.log(urlParam);
+        //     socket.join(data);
+        // })
+
+        io.to(urlParam).emit("here's the message", data);
+        // io.to(roomidparam).emit("here's the message", data);
+        // socket.broadcast.to(roomidparam).emit("here's the message", data);
+        // socket.broadcast.emit("here's the message", data);
+        // socket.to(roomidparam).emit("here's the message", data);
+        // io.to(theroomidparam).emit("here's the message", data);
+
+
+        // saves message to db
+        let message = data.message;
+        var userInfo = socket.handshake.session.userid;
+        db.Message.query().insert({ message: message, user_id: userInfo, room_id: urlParam }).then(console.log(""));
+    })
 })
+
+// io.on('connection', function (socket) {
+
+// })
 
 server.listen(3000, (err) => {
     if (err) throw err;

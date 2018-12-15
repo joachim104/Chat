@@ -83,7 +83,9 @@
       const roomMembers = [];
       let counter = 0;
       $.each(roomNames, function (k, v) {
-        $("#table-body").append("<tr id=" + counter + "> <td style='width: 50%'> <a href='chatroom/" + roomIDs[counter] + "' class='btn btn-default'> " + v + " </td> </tr>");
+        $("#table-body").append("<tr id=" + counter + "> <td style='width: 50%'> <a href='chatroom/" + roomIDs[counter] + "' class='btn btn-default'> " + v + " </td> </tr>").on("click", event => {
+          socket.emit('clicked-room')
+        });
         console.log(counter)
         console.log(roomIDs[counter]);
 
@@ -97,6 +99,14 @@
         counter = counter + 1;
       });
     });
+
+    $('#btn').on('click', event => {
+            const message = $('#message-input').val();
+            socket.emit('send-message', { message });
+            $('.chat').append('<p class="chat-message chat-message-self">' + message + '</p>'); 
+            $('#message-input').val("");
+            // console.log(message);
+        })
 
   </script>
 </body>
