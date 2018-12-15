@@ -14,7 +14,6 @@ exports.userRoute = function (app, db, bodyParser, public) {
         const password = req.body.password;
 
         if (username && password) {
-            // SELECT * FROM users WHERE username = '?' 
             db.User.query().select().where({ username: username }).then(userArray => {
                 if (userArray.length > 0) {
                     console.log("username already exist")
@@ -80,7 +79,6 @@ exports.userRoute = function (app, db, bodyParser, public) {
         if (req.session.isLoggedIn == true) {
             // når vi har roomname så hent alle beskeder i db der matcher det roomname 
             // og sender beskederne videre med
-            //console.log(req.params.roomName);
             var path = require('path')
             res.sendFile(path.resolve(__dirname + '/../public/chatroom.html'));
         }
