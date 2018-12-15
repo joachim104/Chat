@@ -41,20 +41,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 io.on('connection', function (socket) {
 
     const addedUsers = [];
-    // let roomNameString = "";
     let allRoomNamesFromDB = [];
     const roomNamesFoundWithMembership = [];
     const roomIDsFoundWithMembership = [];
     const activeChatroomsArray = [];
 
-
-    // socket.on('join-room', function (data) {
-
-    // });
-
     socket.on('addAllUsers', function () {
         db.User.query().select('id', 'username').from('users').then(userArray => {
-            //console.log(userArray[0].username);
             socket.emit('hereIsTheUserList', userArray);
         })
         socket.on('addUser', function (data) {
@@ -74,19 +67,13 @@ io.on('connection', function (socket) {
             counter = 0;
 
             friendList.forEach(function(element) {
-               // console.log("venliste: ", friendList[counter].friend_id);
                 db.User.query().select('username').from('users').where({id: friendList[counter].friend_id}).then(usernamesOfAllFriends =>{
                     usernamesOfFriends = usernamesOfAllFriends;
-                    console.log(usernamesOfFriends);
                     socket.emit("current-users-friendlist", usernamesOfFriends);
                 })
 
                 counter = counter + 1;
             }, this);
-            // console.log(friendList);   
-
-
-            // socket.emit("current-users-friendlist", usernamesOfFriends);
         });
         db.Room.query().select('name', 'room_name_id').from('rooms').then(allRoomNames => {
             allRoomNamesFromDB = allRoomNames;
@@ -129,7 +116,8 @@ io.on('connection', function (socket) {
         db.User.query().select().from('users').where({ username: data }).then(userArray => {
             let userId = parseInt(socket.handshake.session.userid, 10)
             if (!isNaN(userId)) {
-                db.FriendList.query().insert({ user_id: userId, friend_id: userArray[0].id }).then(console.log(""))
+                db.FriendList.query().insert({ user_id: userId, friend_id: userArray[0].id }).then()
+                
             }
             
                 })
@@ -147,34 +135,20 @@ io.on('connection', function (socket) {
 
         db.Message.query().select().where({ room_id: urlParam }).then(allMessages => {
             allMessages.forEach(function (element) {
-                // console.log("printer element", element.message)
                 messageArray.push(element);
             }, this);
-            // console.log("MESSAGE ARRAY", messageArray)
             socket.emit("here is the db messages", messageArray, socket.handshake.session.userid);
         })
     });
 
-
-    // socket.on("here is messages from db", function (data) {
-    //     db.Message.query().select().where({room_id: dynamicRoomName}).then(allMessages =>{
-    //         allMessages.forEach(function(element) {           
-    //             }, this);
-    //             console.log(allMessages);
-    //         })
-    // })
-
     socket.on('send-message', function (data) {
-
-        console.log(data.message);
-        console.log(socket.handshake.session.username);
 
         socket.to(urlParam).emit("here's the message", data);
 
         // saves message to db
         let message = data.message;
         var userInfo = socket.handshake.session.userid;
-        db.Message.query().insert({ message: message, user_id: userInfo, room_id: urlParam }).then(console.log(""));
+        db.Message.query().insert({ message: message, user_id: userInfo, room_id: urlParam }).then();
     })
 })
 
