@@ -77,17 +77,17 @@ exports.userRoute = function (app, db, bodyParser, public) {
     // express dynamic url param
     app.get('/chatroom/:id', (req, res) => {
         const dynamicRoomName = req.params.id;
-        console.log("dynamisk room navn", dynamicRoomName);
+        // console.log("dynamisk room navn", dynamicRoomName);
         //console.log("DEN RAMMER INDE I CHATROOM!");
-        global.roomidparam = dynamicRoomName;
+        // global.roomidparam = dynamicRoomName;
 
-        db.Message.query().select().where({room_id: dynamicRoomName}).then(allMessages =>{
+        // db.Message.query().select().where({room_id: dynamicRoomName}).then(allMessages =>{
 
-        allMessages.forEach(function(element) {
-                console.log(element.message)
-            }, this);
+        // allMessages.forEach(function(element) {
+        //         // console.log(element.message)
+        //     }, this);
 
-        })
+        // })
 
         // && roomName.indexOf(req.session.username)
 
@@ -105,7 +105,6 @@ exports.userRoute = function (app, db, bodyParser, public) {
     })
     
     app.get('/logout', (req, res) => {
-        console.log("her er jeg")
         req.session.destroy();
         res.redirect('/index.html');
     })
