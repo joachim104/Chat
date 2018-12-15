@@ -80,13 +80,13 @@ io.on('connection', function (socket) {
                     console.log(usernamesOfFriends);
                     socket.emit("current-users-friendlist", usernamesOfFriends);
                 })
-                
-                counter = counter +1;
+
+                counter = counter + 1;
             }, this);
             // console.log(friendList);   
 
 
-           // socket.emit("current-users-friendlist", usernamesOfFriends);
+            // socket.emit("current-users-friendlist", usernamesOfFriends);
         });
         db.Room.query().select('name', 'room_name_id').from('rooms').then(allRoomNames => {
             allRoomNamesFromDB = allRoomNames;
@@ -138,11 +138,31 @@ io.on('connection', function (socket) {
     
 
     let urlParam = "";
+    const messageArray = [];
+
 
     socket.on("here is the url", function (data) {
         urlParam = data; 
         socket.join(urlParam);
-    })
+
+        db.Message.query().select().where({ room_id: urlParam }).then(allMessages => {
+            allMessages.forEach(function (element) {
+                // console.log("printer element", element.message)
+                messageArray.push(element);
+            }, this);
+            // console.log("MESSAGE ARRAY", messageArray)
+            socket.emit("here is the db messages", messageArray, socket.handshake.session.userid);
+        })
+    });
+
+
+    // socket.on("here is messages from db", function (data) {
+    //     db.Message.query().select().where({room_id: dynamicRoomName}).then(allMessages =>{
+    //         allMessages.forEach(function(element) {           
+    //             }, this);
+    //             console.log(allMessages);
+    //         })
+    // })
 
     socket.on('send-message', function (data) {
 
