@@ -69,9 +69,24 @@ io.on('connection', function (socket) {
         let currentUser = socket.handshake.session.username;
         let currentUserId = socket.handshake.session.userid;
 
-        db.FriendList.query().select().where({ user_id: currentUserId }).then(allFriends => {
+        db.FriendList.query().select('friend_id').from('friend_list').where({ user_id: currentUserId }).then(allFriends => {
             const friendList = allFriends;
-            socket.emit("current-users-friendlist", friendList);
+            counter = 0;
+
+            friendList.forEach(function(element) {
+                console.log("venliste: ", friendList[counter].friend_id);
+                db.User.query().select('username').from('users').where({id: friendList[counter].friend_id}).then(usernamesOfAllFriends =>{
+                    usernamesOfFriends = usernamesOfAllFriends;
+                    console.log(usernamesOfFriends);
+                    socket.emit("current-users-friendlist", usernamesOfFriends);
+                })
+                
+                counter = counter +1;
+            }, this);
+            // console.log(friendList);   
+
+
+           // socket.emit("current-users-friendlist", usernamesOfFriends);
         });
         db.Room.query().select('name', 'room_name_id').from('rooms').then(allRoomNames => {
             allRoomNamesFromDB = allRoomNames;
@@ -83,7 +98,13 @@ io.on('connection', function (socket) {
             }
             socket.emit('rooms-found-with-membership', roomNamesFoundWithMembership, roomIDsFoundWithMembership);
         })
+<<<<<<< HEAD
+
+        
+    })
+=======
     });
+>>>>>>> 4b8c9b2bb72dcea6002963f81d67fb71037e5c22
 
     socket.on('createRoom', function (roomName) {
         addedUsers.push(socket.handshake.session.username)

@@ -29,12 +29,6 @@
   </div>
 
   <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th style="width:50%">Your Friends</th>
-        <th style="width:50%">Active Users</th>
-      </tr>
-    </thead>
     <tbody id="table-body-friends">
     </tbody>
   </table>
@@ -70,8 +64,8 @@
 
       $.each(friendList, function (k, v) {
         console.log("K:  ", k)
-        console.log("V:  ", v.friend_id);
-        $("#table-body-friends").append("<tr> <td>" + v.friend_id + "</td> <tr>");
+        console.log("V:  ", v.username);
+        $("#table-body-friends").append("<tr> <td align = 'center' style='font-weight:bold'>" + v.username + "</td> <tr>");
       })
     });
 
