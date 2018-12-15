@@ -57,13 +57,9 @@
 
     socket.on("current-users-friendlist", function (friendListArray) {
 
-      console.log("vennerliste array: ", friendListArray);
-
       const friendList = friendListArray;
 
       $.each(friendList, function (k, v) {
-        console.log("K:  ", k)
-        console.log("V:  ", v.username);
         $("#table-body-friends").append("<tr> <td align = 'center' style='font-weight:bold'>" + v.username + "</td> <tr>");
       })
     });
@@ -71,20 +67,12 @@
 
     socket.on('rooms-found-with-membership', function (roomNames, roomIDs) {
 
-      console.log(roomIDs);
-
       const roomMembers = [];
       let counter = 0;
       $.each(roomNames, function (k, v) {
         $("#table-body").append("<tr id=" + counter + "> <td style='width: 50%'> <a href='chatroom/" + roomIDs[counter] + "' class='btn btn-default'> " + v + " </td> </tr>").on("click", event => {
           socket.emit('clicked-room')
         });
-        console.log(counter)
-        console.log(roomIDs[counter]);
-
-        // denne linje kan tilføjes hvis vi vil se medlemmer af gruppen
-        // $("#" + counter).append("<td>" + roomIDs[counter] + " </td>");
-        // $("#" + counter).append('<td> <button type="button" class="btn btn-primary">Join Chat</button>  </td>');
 
         $("#" + counter).append('<td>' + roomIDs[counter] + '</td>');
 

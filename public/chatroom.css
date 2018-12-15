@@ -48,7 +48,6 @@ body {
 
 .chat-message {
     background: #1adda4;
-    /* order: -1; */
 } 
 
 .chat-message-self {
@@ -92,10 +91,7 @@ body {
     border-radius: 3px;
     box-shadow: 0 3px 0 #0eb2c1;
     cursor: pointer;
-/* 
-    -webkit-transition: background .2s ease;
-    -moz-transition: background .2s ease;
-    -o-transition: background .2s ease; */
+
 }
 .chat-form button:hover {
     background: #13c8d9;
