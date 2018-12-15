@@ -116,29 +116,17 @@ io.on('connection', function (socket) {
     let urlParam = "";
 
     socket.on("here is the url", function (data) {
-        console.log(data);
         urlParam = data; 
-        socket.join(data);
+        console.log(urlParam);
+        socket.join(urlParam);
     })
 
     socket.on('send-message', function (data) {
-        // theroomidparam = roomidparam;
-        // console.log("room ID: ", roomidparam);
+
         console.log(data.message);
+        console.log(socket.handshake.session.username);
 
-        // socket.on("here is the url", function (data) {
-        //     const urlParam = data;
-        //     console.log(urlParam);
-        //     socket.join(data);
-        // })
-
-        io.to(urlParam).emit("here's the message", data);
-        // io.to(roomidparam).emit("here's the message", data);
-        // socket.broadcast.to(roomidparam).emit("here's the message", data);
-        // socket.broadcast.emit("here's the message", data);
-        // socket.to(roomidparam).emit("here's the message", data);
-        // io.to(theroomidparam).emit("here's the message", data);
-
+        socket.to(urlParam).emit("here's the message", data);
 
         // saves message to db
         let message = data.message;
@@ -146,10 +134,6 @@ io.on('connection', function (socket) {
         db.Message.query().insert({ message: message, user_id: userInfo, room_id: urlParam }).then(console.log(""));
     })
 })
-
-// io.on('connection', function (socket) {
-
-// })
 
 server.listen(3000, (err) => {
     if (err) throw err;

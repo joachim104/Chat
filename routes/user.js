@@ -77,19 +77,15 @@ exports.userRoute = function (app, db, bodyParser, public) {
     // express dynamic url param
     app.get('/chatroom/:id', (req, res) => {
         const dynamicRoomName = req.params.id;
-        // console.log("dynamisk room navn", dynamicRoomName);
-        //console.log("DEN RAMMER INDE I CHATROOM!");
-        // global.roomidparam = dynamicRoomName;
+        console.log("HER ER DYNAMIC ROOM NAME", dynamicRoomName);
+    
 
-        // db.Message.query().select().where({room_id: dynamicRoomName}).then(allMessages =>{
+        db.Message.query().select().where({room_id: dynamicRoomName}).then(allMessages =>{
 
-        // allMessages.forEach(function(element) {
-        //         // console.log(element.message)
-        //     }, this);
-
-        // })
-
-        // && roomName.indexOf(req.session.username)
+        allMessages.forEach(function(element) {
+                console.log(element.message)
+            }, this);
+        })
 
         if (req.session.isLoggedIn == true) {
             // når vi har roomname så hent alle beskeder i db der matcher det roomname 

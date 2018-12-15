@@ -18,7 +18,7 @@
 
     <div id="header"></div>
 
-    <div class="chatbox">
+    <div style="border: 3px solid#1ddced" class="chatbox">
         <div class="chatlogs">
             <div class="chat">
             </div>
@@ -26,7 +26,7 @@
         <div class="chat-form">
             <textarea id="message-input"></textarea>
             <button id="btn">Send</button>
-            <button id="btn2">Active Chat</button>
+            <button id="btn2">Activate Chat</button>
         </div>
     </div>
 
@@ -34,41 +34,41 @@
         const socket = io.connect('http://localhost:3000/')
 
 
-        $('#btn2').on('click', event => {
-            var fullURL = window.location.href;
-            var n = fullURL.lastIndexOf('/');
-            var urlParams = fullURL.substring(n + 1);
-            socket.emit("here is the url", urlParams);
-            console.log(urlParams)
-        })
+        $(document).ready(function () {
+                $("#btn").hide();
+            });
 
 
-        $('#btn').on('click', event => {
-            // var fullURL = window.location.href;
-            // var n = fullURL.lastIndexOf('/');
-            // var urlParams = fullURL.substring(n + 1);
-            // socket.emit("here is the url", urlParams);
-            // console.log(urlParams)
-            // -----------------------------------------
-            const message = $('#message-input').val();
-            socket.emit('send-message', { message });
-            $('.chat').append('<p class="chat-message chat-message-self">' + message + '</p>');
-            $('#message-input').val("");
-            // console.log(message);
-        })
+            $('#btn2').on('click', event => {
 
-        socket.on("here's the message", function (data) {
-            console.log("hej", data);
-            $('.chat').append('<p class="chat-message">' + data.message + '</p>');
-            console.log("Bruger modtager besked");
-            // console.log("data printet on client:", data);
-        })
+                var fullURL = window.location.href;
+                var n = fullURL.lastIndexOf('/');
+                var urlParams = fullURL.substring(n + 1);
+                socket.emit("here is the url", urlParams);
+                console.log(urlParams)
+                $("#btn2").hide();
+                $("#btn").show();
+            })
+
+            $('#btn').on('click', event => {
+                const message = $('#message-input').val();
+                socket.emit('send-message', { message });
+                $('.chat').append('<p class="chat-message chat-message-self">' + message + '</p>');
+                $('#message-input').val("");
+            })
+
+            socket.on("here's the message", function (data) {
+                console.log("hej", data);
+                $('.chat').append('<p class="chat-message">' + data.message + '</p>');
+                console.log("Bruger modtager besked");
+                // console.log("data printet on client:", data);
+            })
 
 
-        $(function () {
-            $("#header").load("/components/header.html");
-            $("#footer").load("/components/footer.html");
-        });
+            $(function () {
+                $("#header").load("/components/header.html");
+                $("#footer").load("/components/footer.html");
+            });
 
     </script>
 
