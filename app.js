@@ -74,7 +74,7 @@ io.on('connection', function (socket) {
             counter = 0;
 
             friendList.forEach(function(element) {
-                console.log("venliste: ", friendList[counter].friend_id);
+               // console.log("venliste: ", friendList[counter].friend_id);
                 db.User.query().select('username').from('users').where({id: friendList[counter].friend_id}).then(usernamesOfAllFriends =>{
                     usernamesOfFriends = usernamesOfAllFriends;
                     console.log(usernamesOfFriends);
@@ -98,13 +98,7 @@ io.on('connection', function (socket) {
             }
             socket.emit('rooms-found-with-membership', roomNamesFoundWithMembership, roomIDsFoundWithMembership);
         })
-<<<<<<< HEAD
-
-        
-    })
-=======
     });
->>>>>>> 4b8c9b2bb72dcea6002963f81d67fb71037e5c22
 
     socket.on('createRoom', function (roomName) {
         addedUsers.push(socket.handshake.session.username)
@@ -126,19 +120,27 @@ io.on('connection', function (socket) {
     })
 
     socket.on('addAsFriend', function (data) {
+        idOfAllHisFriends = [];
+        currentUser = socket.handshake.session.id;
+        if(data == socket.handshake.session.username){
+            socket.emit("cant-add-yourself-as-friend");
+        }else{
+            
         db.User.query().select().from('users').where({ username: data }).then(userArray => {
             let userId = parseInt(socket.handshake.session.userid, 10)
             if (!isNaN(userId)) {
                 db.FriendList.query().insert({ user_id: userId, friend_id: userArray[0].id }).then(console.log(""))
             }
-        })
+            
+                })
+            }
     })
+    
 
     let urlParam = "";
 
     socket.on("here is the url", function (data) {
         urlParam = data; 
-        console.log(urlParam);
         socket.join(urlParam);
     })
 

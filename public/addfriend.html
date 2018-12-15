@@ -42,14 +42,16 @@ socket.on('hereIsTheUserList', function(data){
     })
 })
 
+socket.on("cant-add-yourself-as-friend", function(){
+    alert("You can't be friends with yourself!");
+})
+
 $('#addUserAsFriend').on('click', function(a){
     a.preventDefault();
     if($("#userList option:selected").length > 0){
     selectedFriend = $("#userList option:selected").text();
     socket.emit('addAsFriend', selectedFriend);
     $("#userList option:selected").remove();
-
-    alert("You are now friends with " + selectedFriend + "!" );
     }
 })
 
